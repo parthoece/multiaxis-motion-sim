@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Windows;
 using MotionControl.Application;
 using MotionControl.Domain;
@@ -20,6 +22,7 @@ public partial class App : System.Windows.Application
         Directory.CreateDirectory(runtimeDirectory);
 
         var scenario = new SimulationScenario();
+
         var coordinator = new MachineCoordinator(
             new DeterministicMotionController(scenario),
             new VirtualPlcGateway(scenario),
@@ -30,7 +33,10 @@ public partial class App : System.Windows.Application
             new SystemClock(),
             new RecipeValidator());
 
-        var viewModel = new MainViewModel(coordinator, scenario);
+        var viewModel = new MainViewModel(
+            coordinator,
+            scenario);
+
         var window = new MainWindow
         {
             DataContext = viewModel,
@@ -43,6 +49,7 @@ public partial class App : System.Windows.Application
 
         MainWindow = window;
         window.Show();
+
         viewModel.StartStatusMonitoring();
     }
 }
