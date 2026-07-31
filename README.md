@@ -158,38 +158,23 @@ dotnet run --project src/MotionControl.OperatorConsole -- probe-timeout
 A failure should be reproducible before it becomes a regression test.
 
 ```mermaid
-flowchart TB
-    A[Inject probe timeout]
-    B[Start inspection]
-    C[Probe does not trigger]
-    D[Cancel active motion]
-    E[Enter Faulted]
-    F[Preserve ProbeTimeout]
-    G[Reset and rehome]
-    H[Return to Ready]
+flowchart LR
+    A[Inject timeout]
+    B[Probe fails]
+    C[Cancel motion<br/>Enter Faulted]
+    D[Preserve alarm<br/>Reset and rehome]
 
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    F --> G
-    G --> H
-```
-
-<details>
-<summary><strong>What should happen during this fault?</strong></summary>
-
-1. The simulated probe does not trigger.
-2. The active motion command is cancelled.
-3. The machine enters `Faulted`.
-4. `ProbeTimeout` remains the primary alarm.
-5. Reset returns the machine to `NotHomed`.
-6. Homing must complete before another automatic cycle.
-
-A secondary cancellation or cleanup event must not replace the original machine fault.
-
-</details>
+    A --> B --> C --> D
+<details> <summary><strong>View the complete fault sequence</strong></summary>
+Enable probe-timeout injection.
+Start the inspection.
+The simulated probe does not trigger.
+Active motion is cancelled.
+The machine enters Faulted.
+ProbeTimeout remains the primary alarm.
+Reset returns the machine to NotHomed.
+Rehoming is required before another automatic cycle.
+</details> ```
 
 ---
 
