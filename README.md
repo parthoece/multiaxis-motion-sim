@@ -1,5 +1,11 @@
 # Virtual Multi-Axis Motion Control Platform
 
+<!-- DOC-NAV:START -->
+
+[Home](README.md) · [Documentation](docs/README.md) · [Getting Started](docs/GETTING_STARTED.md) · [Architecture](docs/ARCHITECTURE.md) · [Testing](docs/TEST_STRATEGY.md) · [Implementation](docs/IMPLEMENTATION_GUIDE.md)
+
+<!-- DOC-NAV:END -->
+
 [![CI](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/ci.yml/badge.svg)](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/ci.yml)
 [![Windows HMI](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/windows-hmi.yml/badge.svg)](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/windows-hmi.yml)
 [![CodeQL](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/codeql.yml/badge.svg)](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/codeql.yml)
@@ -12,44 +18,70 @@
 
 A software-in-the-loop virtual commissioning platform for deterministic XYZ motion, machine-state control, fault injection, cancellation, recovery, diagnostics, and operator-interface testing.
 
-Built with **C#/.NET, WPF, SQLite, xUnit, and LinuxCNC**.
+Built with **C#/.NET, WPF, SQLite, xUnit, and an independent LinuxCNC simulation profile**.
 
 ---
 
-## See it in action
+## Explore the project
 
-<!-- Replace this placeholder with an animated GIF or screenshot. -->
-
-<p align="center">
-  <img src="docs/assets/hmi-demo.gif"
-       alt="Virtual XYZ inspection machine running through initialization, homing, inspection, and fault recovery"
-       width="900">
-</p>
-
-> Add a short 15–30 second GIF showing:
->
-> `Initialize → Home → Run inspection → Inject probe timeout → Reset`
-
-No physical controller, PLC, probe, or machine frame is required.
+| I want to… | Start here |
+| --- | --- |
+| Run a complete inspection cycle | [Run the normal scenario](#run-the-normal-scenario) |
+| Reproduce a machine fault | [Inject a fault](#inject-a-fault) |
+| Test operator Stop behavior | [Test operator-stop](#test-operator-stop) |
+| Launch the Windows interface | [Run the WPF HMI](#run-the-wpf-hmi) |
+| Understand the architecture | [See how it works](#how-it-works) |
+| Explore the LinuxCNC profile | [Open the LinuxCNC section](#linuxcnc-simulation-profile) |
+| Review recovery behavior | [Open the recovery policy](#recovery-policy) |
+| Run the automated tests | [Go to testing](#testing-and-verification) |
 
 ---
 
-## Choose what to explore
+## The problem
 
-| I want to…                         | Start here                                          |
-| ---------------------------------- | --------------------------------------------------- |
-| Run a successful inspection        | [Normal cycle](#run-a-normal-inspection)            |
-| Trigger a repeatable machine fault | [Fault injection](#inject-a-fault)                  |
-| Test operator Stop behavior        | [Operator cancellation](#test-operator-stop)        |
-| Launch the Windows interface       | [WPF HMI](#windows-operator-hmi)                    |
-| Explore the design                 | [Architecture](#how-it-works)                       |
-| Run the LinuxCNC profile           | [LinuxCNC simulation](#linuxcnc-simulation-profile) |
-| Review the test strategy           | [Testing](#testing-and-verification)                |
-| Understand project limits          | [Scope boundary](#scope-boundary)                   |
+Industrial machine-control software is often validated only after the mechanical structure, electrical system, controller, sensors, PLC signals, and operator station have been assembled.
+
+That creates several problems:
+
+- software defects become mixed with wiring, sensor, controller, and mechanical failures;
+- access to the machine is limited and shared across engineering teams;
+- every software correction may require another commissioning session;
+- failures are discovered late, when they are more expensive to correct;
+- abnormal conditions may be disruptive or unsafe to reproduce repeatedly.
+
+Typical examples include a probe that does not trigger, incomplete homing, E-stop activation, communication loss, missing process permissives, operator cancellation, and movement approaching a configured software limit.
+
+## The solution
+
+This project provides a deterministic virtual machine that allows equipment-software behavior to be tested before physical hardware is available.
+
+It combines:
+
+- a C#/.NET equipment-control application;
+- a deterministic virtual Cartesian XYZ machine;
+- simulated PLC permissives and process signals;
+- versioned inspection recipes;
+- repeatable fault injection;
+- asynchronous cancellation and Stop handling;
+- explicit alarm, reset, and recovery policies;
+- SQLite operational history;
+- JSON Lines diagnostic events;
+- a Windows WPF operator interface;
+- an independent LinuxCNC simulation profile.
+
+The objective is not simply to animate three axes. It is to verify that the complete equipment workflow remains **controlled, diagnosable, and recoverable** during normal and abnormal operation.
 
 ---
 
 ## Try it
+
+### Requirements
+
+- .NET SDK `10.0.302`, or a compatible SDK selected through `global.json`
+- Git
+- Windows 10 or 11 for the WPF HMI
+- Python 3.10 or later for optional repository checks
+- LinuxCNC only for the independent LinuxCNC profile
 
 ### Clone the repository
 
@@ -58,9 +90,10 @@ git clone https://github.com/parthoece/multiaxis-motion-sim.git
 cd multiaxis-motion-sim
 ```
 
-### Run a normal inspection
+### Run the normal scenario
 
 ```bash
+dotnet restore
 dotnet run --project src/MotionControl.OperatorConsole -- normal
 ```
 
@@ -76,33 +109,35 @@ OFF
 → READY
 ```
 
-The simulated machine:
+During the cycle, the virtual machine:
 
 1. verifies startup permissives;
-2. homes the Z, X, and Y axes;
+2. homes Z, X, and Y;
 3. loads a five-point inspection recipe;
 4. moves above each inspection point;
 5. probes the virtual surface;
 6. evaluates tolerances;
-7. stores the cycle and measurements.
+7. stores the completed cycle and measurements.
+
+Console operational data is written under `.runtime/`.
 
 ---
 
 ## Pick a scenario
 
-Each scenario is deterministic. Running the same scenario should produce the same state transitions, alarm, recovery target, and diagnostic evidence.
+Each scenario is deterministic. Repeating the same scenario should produce the same state transitions, alarm, recovery target, and diagnostic evidence.
 
-| Scenario               | Command            | What to observe                                     |
-| ---------------------- | ------------------ | --------------------------------------------------- |
-| Successful inspection  | `normal`           | Five measurements and a completed cycle             |
-| Operator Stop          | `operator-stop`    | Active motion cancellation and deliberate recovery  |
-| Probe timeout          | `probe-timeout`    | Primary alarm preservation and rehoming requirement |
-| Missing part           | `part-missing`     | Cycle permissive rejection                          |
-| E-stop activation      | `estop`            | Faulted state and invalidated homing                |
-| PLC communication loss | `plc-loss`         | Communication fault handling                        |
-| Out of tolerance       | `out-of-tolerance` | Completed inspection with a failed process result   |
+| Scenario | Command | What to observe |
+| --- | --- | --- |
+| Successful inspection | `normal` | Five measurements and a completed cycle |
+| Operator Stop | `operator-stop` | Active-operation cancellation and deliberate recovery |
+| Probe timeout | `probe-timeout` | Preserved primary alarm and required rehoming |
+| Missing part | `part-missing` | Cycle permissive rejection |
+| E-stop activation | `estop` | Faulted state and invalidated homing |
+| PLC communication loss | `plc-loss` | Communication-fault handling |
+| Out of tolerance | `out-of-tolerance` | Completed inspection with a failed process result |
 
-Run any scenario:
+Run any scenario with:
 
 ```bash
 dotnet run --project src/MotionControl.OperatorConsole -- <scenario>
@@ -114,6 +149,8 @@ For example:
 dotnet run --project src/MotionControl.OperatorConsole -- probe-timeout
 ```
 
+> An out-of-tolerance part is a completed process result, not a machine-control fault.
+
 ---
 
 ## Inject a fault
@@ -121,33 +158,36 @@ dotnet run --project src/MotionControl.OperatorConsole -- probe-timeout
 A failure should be reproducible before it becomes a regression test.
 
 ```mermaid
-flowchart LR
-    A[Inject probe timeout] --> B[Start inspection]
-    B --> C[Move above point]
-    C --> D[Begin probing]
-    D --> E[Probe does not trigger]
-    E --> F[Cancel motion]
-    F --> G[Enter Faulted]
-    G --> H[Preserve ProbeTimeout]
-    H --> I[Reset]
-    I --> J[Rehome]
-    J --> K[Ready]
+flowchart TB
+    A[Inject probe timeout]
+    B[Start inspection]
+    C[Probe does not trigger]
+    D[Cancel active motion]
+    E[Enter Faulted]
+    F[Preserve ProbeTimeout]
+    G[Reset and rehome]
+    H[Return to Ready]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
 ```
 
 <details>
-<summary><strong>Why preserve the primary alarm?</strong></summary>
+<summary><strong>What should happen during this fault?</strong></summary>
 
-A secondary cancellation or cleanup event should not replace the original machine fault.
+1. The simulated probe does not trigger.
+2. The active motion command is cancelled.
+3. The machine enters `Faulted`.
+4. `ProbeTimeout` remains the primary alarm.
+5. Reset returns the machine to `NotHomed`.
+6. Homing must complete before another automatic cycle.
 
-For a probe timeout:
-
-* `ProbeTimeout` remains the primary alarm;
-* active movement is cancelled;
-* the machine enters `Faulted`;
-* reset returns the machine to `NotHomed`;
-* homing must complete before another automatic cycle.
-
-This makes the failure diagnosable and prevents recovery logic from hiding its cause.
+A secondary cancellation or cleanup event must not replace the original machine fault.
 
 </details>
 
@@ -176,79 +216,59 @@ The scenario exits successfully only when cancellation and recovery behavior are
 
 ---
 
-## The problem
-
-Industrial machine-control software is often validated only after the mechanical structure, electrical system, motion controller, sensors, PLC, and operator station have been assembled.
-
-At that stage:
-
-* software defects become mixed with wiring and mechanical problems;
-* access to the machine is limited;
-* failures are expensive to reproduce;
-* every software correction may require another commissioning session;
-* abnormal conditions may be disruptive or unsafe to test repeatedly.
-
-Examples include probe timeouts, homing failures, communication loss, missing permissives, E-stop activation, operator cancellation, and software-limit violations.
-
----
-
-## The solution
-
-This project provides a deterministic virtual machine that allows equipment-software behavior to be tested before hardware is available.
-
-It combines:
-
-* a C#/.NET equipment-control application;
-* a deterministic virtual XYZ machine;
-* simulated PLC permissives and process signals;
-* versioned inspection recipes;
-* repeatable fault injection;
-* asynchronous cancellation and Stop handling;
-* explicit alarm and recovery policies;
-* SQLite operational history;
-* JSON Lines diagnostic events;
-* a Windows WPF operator interface;
-* an independent LinuxCNC simulation profile.
-
-The objective is not simply to animate three axes.
-
-The objective is to verify that the complete equipment workflow remains controlled, diagnosable, and recoverable during both normal and abnormal operation.
-
----
-
 ## How it works
+
+### Current implementation
+
+```mermaid
+flowchart TB
+    UI[WPF HMI or Console]
+    MC[MachineCoordinator]
+    APP[Application Services]
+    DOMAIN[Equipment Domain]
+    PLC[Virtual PLC]
+    MOTION[Deterministic XYZ Simulator]
+    DATA[SQLite and JSONL]
+
+    UI --> MC
+    MC --> APP
+    APP --> DOMAIN
+    APP --> PLC
+    APP --> MOTION
+    APP --> DATA
+```
+
+The presentation layer sends commands through `MachineCoordinator`. Application services coordinate machine state, motion, simulated PLC signals, persistence, diagnostics, cancellation, and recovery.
+
+### Planned LinuxCNC integration
 
 ```mermaid
 flowchart LR
-    USER[Operator] --> UI[WPF HMI or Console]
-    UI --> COORD[MachineCoordinator]
+    APP[Machine Workflow]
+    CONTRACT[IMotionController]
+    ADAPTER[LinuxCncMotionController]
+    CNC[LinuxCNC]
 
-    COORD --> STATE[Machine State and Workflow]
-    COORD --> PLC[Virtual PLC]
-    COORD --> MOTION[IMotionController]
-    COORD --> DATA[SQLite and JSONL]
-
-    MOTION --> SIM[Deterministic XYZ Simulator]
-    MOTION -. planned adapter .-> CNC[LinuxCNC]
+    APP --> CONTRACT
+    CONTRACT --> ADAPTER
+    ADAPTER --> CNC
 ```
 
-The application depends on the `IMotionController` abstraction rather than a specific motion platform.
-
-The deterministic simulator is the current .NET motion implementation. The LinuxCNC profile is independent and provides a future integration target.
+The equipment workflow depends on `IMotionController`, not on a specific motion platform. This keeps controller-specific communication outside the domain and application rules.
 
 <details>
 <summary><strong>Explore the application responsibilities</strong></summary>
 
-| Component          | Responsibility                                                    |
-| ------------------ | ----------------------------------------------------------------- |
-| Lifecycle service  | Initialization, homing, reset, and recovery                       |
+| Component | Responsibility |
+| --- | --- |
+| Lifecycle service | Initialization, homing, reset, and recovery |
 | Inspection service | Recipe execution, probing, measurements, and tolerance evaluation |
-| Stop service       | Active-operation cancellation and motion completion confirmation  |
-| Status service     | Continuous machine, axis, signal, alarm, and measurement status   |
-| Command gate       | Prevents conflicting machine commands                             |
-| Fault context      | Preserves the primary fault and required recovery target          |
-| Persistence        | Stores states, alarms, cycles, and measurements                   |
-| Event log          | Writes append-friendly JSON Lines diagnostic events               |
+| Stop service | Active-operation cancellation and motion completion confirmation |
+| Status service | Continuous machine, axis, signal, alarm, and measurement status |
+| Command gate | Prevents conflicting machine commands |
+| Fault context | Preserves the primary fault and required recovery target |
+| Persistence | Stores transitions, alarms, cycles, and measurements |
+| Event log | Writes append-friendly JSON Lines diagnostic events |
 
 See [Architecture](docs/ARCHITECTURE.md) for the complete design.
 
@@ -256,9 +276,9 @@ See [Architecture](docs/ARCHITECTURE.md) for the complete design.
 
 ---
 
-## Windows operator HMI
+## Run the WPF HMI
 
-Run on Windows:
+Run the Windows operator interface:
 
 ```powershell
 dotnet run --project src/MotionControl.Hmi.Wpf
@@ -266,16 +286,15 @@ dotnet run --project src/MotionControl.Hmi.Wpf
 
 The HMI provides:
 
-* state-aware command buttons;
-* continuous XYZ position status;
-* movement indication;
-* permissive status;
-* active alarm display;
-* warning count;
-* latest inspection measurements;
-* deterministic probe-timeout controls.
+- state-aware command availability;
+- continuous XYZ position status;
+- movement indication;
+- permissive and alarm summaries;
+- operational-warning status;
+- recent inspection measurements;
+- deterministic probe-timeout controls.
 
-Operational data is stored under the current user’s local application-data directory.
+WPF operational data is stored under the current user’s local application-data directory.
 
 <details>
 <summary><strong>Suggested HMI demonstration</strong></summary>
@@ -287,17 +306,27 @@ Operational data is stored under the current user’s local application-data dir
 5. Review the five measurements.
 6. Enable probe-timeout injection.
 7. Start another inspection.
-8. Observe motion cancellation and the preserved alarm.
+8. Observe cancellation and the preserved alarm.
 9. Reset the machine.
 10. Rehome and return to `Ready`.
 
 </details>
 
+<!--
+Optional: add a real screenshot or short GIF when available.
+
+<p align="center">
+  <img src="docs/assets/hmi-demo.gif"
+       alt="Virtual XYZ inspection system running through initialization, homing, inspection, and fault recovery"
+       width="900">
+</p>
+-->
+
 ---
 
 ## LinuxCNC simulation profile
 
-Run on a LinuxCNC system:
+Run the independent LinuxCNC profile on a LinuxCNC system:
 
 ```bash
 linuxcnc configs/linuxcnc/xyz-3axis/machine.ini
@@ -305,29 +334,58 @@ linuxcnc configs/linuxcnc/xyz-3axis/machine.ini
 
 The profile includes:
 
-* three Cartesian axes;
-* simulated homing;
-* configured travel limits;
-* HAL configuration;
-* coordinated-motion programs;
-* probing G-code.
+- three simulated Cartesian axes;
+- homing configuration;
+- configured software limits;
+- HAL configuration;
+- coordinated-motion programs;
+- probing G-code.
 
 The LinuxCNC profile is currently independent of the .NET application.
 
-A future `LinuxCncMotionController` adapter is planned to implement `IMotionController` without changing the equipment-domain rules.
+A future `LinuxCncMotionController` adapter is planned to implement `IMotionController` without changing equipment-domain rules.
 
 <details>
 <summary><strong>Why keep LinuxCNC behind an adapter?</strong></summary>
 
 The application should not contain controller-specific rules.
 
-The adapter boundary allows the same equipment workflow to operate with:
+The adapter boundary allows the same machine workflow to operate with:
 
-* the deterministic in-process simulator;
-* LinuxCNC;
-* a future physical motion controller.
+- the deterministic in-process simulator;
+- LinuxCNC;
+- a future physical motion controller.
 
 Controller communication can change without rewriting machine states, recipes, alarm policy, or recovery behavior.
+
+</details>
+
+---
+
+## Diagnostics and operational evidence
+
+The platform records two complementary forms of evidence:
+
+| Store | Purpose |
+| --- | --- |
+| SQLite | Transactional machine transitions, alarms, cycles, and measurements |
+| JSON Lines | Append-friendly diagnostic events for troubleshooting and inspection |
+
+This supports both structured operational history and portable event-level diagnostics.
+
+<details>
+<summary><strong>What should be diagnosable after a failure?</strong></summary>
+
+A repeatable fault should leave enough evidence to answer:
+
+- Which command was active?
+- Which permissive or signal changed?
+- What was the primary alarm?
+- Was active motion cancelled?
+- Which machine state followed?
+- What recovery target was selected?
+- Was rehoming required?
+- Which secondary warnings occurred?
 
 </details>
 
@@ -362,43 +420,43 @@ On a compatible shell:
 ./scripts/check.sh
 ```
 
-Test coverage includes:
+Verification coverage includes:
 
-* domain rules and state transitions;
-* initialization and homing;
-* inspection workflows;
-* cancellation and Stop behavior;
-* fault preservation and recovery;
-* status reporting;
-* SQLite persistence;
-* JSON Lines diagnostics;
-* architecture dependency rules;
-* documentation integrity.
+- domain rules and machine-state transitions;
+- initialization and homing;
+- inspection workflows;
+- cancellation and Stop behavior;
+- primary-fault preservation and recovery;
+- continuous status reporting;
+- SQLite persistence;
+- JSON Lines diagnostics;
+- architecture dependency rules;
+- documentation integrity.
 
-The workflow badges at the top of this README show the latest authoritative CI status.
+The workflow badges at the top of this README show the latest authoritative CI, Windows HMI, and CodeQL status.
 
 ---
 
-## Recovery explorer
+## Recovery policy
+
+Reset does not automatically restart motion.
 
 <details>
 <summary><strong>View recovery targets</strong></summary>
 
-Reset does not automatically restart motion.
+| Fault condition | Recovery target |
+| --- | --- |
+| Missing part | `Ready` |
+| Air pressure unavailable | `Ready` |
+| Operator cancellation | `Ready` in the deterministic simulator |
+| Probe timeout | `NotHomed` |
+| Homing failure | `NotHomed` |
+| Software-limit violation | `NotHomed` |
+| E-stop activation | `NotHomed` |
+| Motion controller unavailable | `Off` |
+| Unexpected startup failure | `Off` |
 
-| Fault condition               | Recovery target                        |
-| ----------------------------- | -------------------------------------- |
-| Missing part                  | `Ready`                                |
-| Air pressure unavailable      | `Ready`                                |
-| Operator cancellation         | `Ready` in the deterministic simulator |
-| Probe timeout                 | `NotHomed`                             |
-| Homing failure                | `NotHomed`                             |
-| Software-limit violation      | `NotHomed`                             |
-| E-stop activation             | `NotHomed`                             |
-| Motion controller unavailable | `Off`                                  |
-| Unexpected startup failure    | `Off`                                  |
-
-A future physical controller may apply stricter recovery requirements.
+A future physical controller adapter may apply stricter recovery requirements.
 
 </details>
 
@@ -433,33 +491,49 @@ multiaxis-motion-sim/
 
 ---
 
+## Project direction
+
+Current development priorities include:
+
+- maintaining passing Linux and Windows workflows;
+- completing the WPF manual test matrix;
+- verifying the LinuxCNC profile in its target environment;
+- adding alarm-history and recipe-management interfaces;
+- implementing the .NET-to-LinuxCNC adapter;
+- adding shared motion-controller contract tests.
+
+See the [Development Plan](docs/DEVELOPMENT_PLAN.md) for the detailed roadmap.
+
+---
+
 ## Scope boundary
 
-This repository validates software behavior:
+This project validates software behavior, including:
 
-* equipment architecture;
-* machine states and transitions;
-* coordinated-motion commands;
-* homing order;
-* software limits;
-* simulated PLC handshakes;
-* recipes and inspection logic;
-* alarms and recovery;
-* persistence;
-* concurrency and cancellation;
-* deterministic failure scenarios.
+- equipment architecture;
+- machine-state transitions;
+- coordinated-motion commands;
+- homing order;
+- software limits;
+- simulated PLC handshakes;
+- recipes and inspection logic;
+- alarms and recovery;
+- persistence;
+- command concurrency;
+- cancellation;
+- deterministic failure scenarios.
 
-It does not validate:
+It does **not** validate:
 
-* physical positioning accuracy or repeatability;
-* backlash, stiffness, vibration, or thermal behavior;
-* motors, drives, or power-supply sizing;
-* real sensor performance;
-* electrical-noise immunity;
-* physical collision dynamics;
-* emergency-stop hardware performance;
-* functional-safety integrity;
-* machinery-safety compliance.
+- physical positioning accuracy or repeatability;
+- backlash, stiffness, vibration, or thermal behavior;
+- motor, drive, or power-supply sizing;
+- electrical-noise immunity;
+- real sensor performance;
+- physical collision dynamics;
+- emergency-stop hardware performance;
+- functional-safety integrity;
+- machinery-safety compliance.
 
 > This is a simulation-only project. Physical performance and safety claims require separate hardware validation.
 
@@ -467,16 +541,24 @@ It does not validate:
 
 ## Continue exploring
 
-| Topic                             | Document                                             |
-| --------------------------------- | ---------------------------------------------------- |
-| Install and run                   | [Getting Started](docs/GETTING_STARTED.md)           |
-| Understand the design             | [Architecture](docs/ARCHITECTURE.md)                 |
-| Follow the implementation         | [Implementation Guide](docs/IMPLEMENTATION_GUIDE.md) |
-| Review verification coverage      | [Test Strategy](docs/TEST_STRATEGY.md)               |
-| Prepare a portfolio demonstration | [Portfolio Review](docs/PORTFOLIO_REVIEW.md)         |
-| Prepare for technical discussion  | [Interview Preparation](docs/INTERVIEW_PREP.md)      |
-| Browse all documentation          | [Documentation Index](docs/README.md)                |
+| Topic | Document |
+| --- | --- |
+| Install and run | [Getting Started](docs/GETTING_STARTED.md) |
+| Understand the design | [Architecture](docs/ARCHITECTURE.md) |
+| Follow the implementation | [Implementation Guide](docs/IMPLEMENTATION_GUIDE.md) |
+| Review verification coverage | [Test Strategy](docs/TEST_STRATEGY.md) |
+| Prepare a portfolio demonstration | [Portfolio Review](docs/PORTFOLIO_REVIEW.md) |
+| Prepare for technical discussion | [Interview Preparation](docs/INTERVIEW_PREP.md) |
+| Browse all documentation | [Documentation Index](docs/README.md) |
 
 ## License
 
 Released under the [MIT License](LICENSE).
+
+---
+
+<!-- DOC-FOOTER:START -->
+
+[Documentation index](docs/README.md) · [Back to top](#virtual-multi-axis-motion-control-platform)
+
+<!-- DOC-FOOTER:END -->
