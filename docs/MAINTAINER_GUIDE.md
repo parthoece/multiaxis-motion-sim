@@ -54,11 +54,11 @@ Follow [Release Process](RELEASE_PROCESS.md). A release must include:
 
 ## Ownership
 
-Replace `OWNER` in:
+Replace `parthoece` in:
 
 - badges;
 - repository URLs;
-- CODEOWNERS;
+- CODEparthoeceS;
 - issue contact links;
 - citation metadata.
 

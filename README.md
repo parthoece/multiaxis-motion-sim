@@ -6,9 +6,9 @@
 
 <!-- DOC-NAV:END -->
 
-[![CI](https://github.com/OWNER/multiaxis-motion-sim/actions/workflows/ci.yml/badge.svg)](.github/workflows/ci.yml)
-[![Windows HMI](https://github.com/OWNER/multiaxis-motion-sim/actions/workflows/windows-hmi.yml/badge.svg)](.github/workflows/windows-hmi.yml)
-[![CodeQL](https://github.com/OWNER/multiaxis-motion-sim/actions/workflows/codeql.yml/badge.svg)](.github/workflows/codeql.yml)
+[![CI](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/ci.yml/badge.svg)](.github/workflows/ci.yml)
+[![Windows HMI](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/windows-hmi.yml/badge.svg)](.github/workflows/windows-hmi.yml)
+[![CodeQL](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/codeql.yml/badge.svg)](.github/workflows/codeql.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 [![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4)](global.json)
 [![Simulation only](https://img.shields.io/badge/hardware-simulation%20only-blue)](#scope-boundary)
@@ -224,11 +224,11 @@ They do not solve the current single-machine virtual-commissioning problem.
 ### Clone the repository
 
 ```bash
-git clone https://github.com/OWNER/multiaxis-motion-sim.git
+git clone https://github.com/parthoece/multiaxis-motion-sim.git
 cd multiaxis-motion-sim
 ```
 
-Replace `OWNER` with the GitHub username or organization before publishing.
+Replace `parthoece` with the GitHub username or organization before publishing.
 
 ### Run the normal console simulation
 
@@ -472,7 +472,7 @@ The repository uses the MIT License and includes:
 * CI and security workflows;
 * release and maintainer guidance.
 
-Before publishing, replace every `OWNER` placeholder with the GitHub username or organization:
+Before publishing, replace every `parthoece` placeholder with the GitHub username or organization:
 
 ```bash
 python scripts/replace_owner.py YOUR_GITHUB_USERNAME

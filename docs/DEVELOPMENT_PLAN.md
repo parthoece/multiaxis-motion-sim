@@ -132,7 +132,7 @@ Add only after the XYZ workflow and LinuxCNC adapter are verified.
 
 ## Milestone 6 — Produce the hiring portfolio release
 
-- Replace `OWNER`.
+- Replace `parthoece`.
 - Pass public CI, Windows build, and CodeQL.
 - Tag a release.
 - Publish architecture image.

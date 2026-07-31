@@ -14,7 +14,7 @@ The project uses a maintainer-led open-development model.
 - **Reviewers** reproduce behavior and review an engineering area.
 - **Maintainers** triage, merge, release, and enforce project policy.
 
-Replace `@OWNER` with the initial maintainer when publishing.
+Replace `@parthoece` with the initial maintainer when publishing.
 
 ## Decision process
 

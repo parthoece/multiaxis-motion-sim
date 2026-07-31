@@ -249,7 +249,7 @@ Use:
 
 Before an interview:
 
-- Replace all `OWNER` placeholders.
+- Replace all `parthoece` placeholders.
 - Ensure CI and Windows HMI workflows pass.
 - Tag a release.
 - Record a two- to four-minute normal-cycle demonstration.

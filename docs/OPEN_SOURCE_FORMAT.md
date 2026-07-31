@@ -15,7 +15,7 @@ The repository includes:
 - Code of Conduct;
 - security and support policies;
 - citation metadata;
-- CODEOWNERS;
+- CODEparthoeceS;
 - issue forms and pull-request template;
 - dependency update configuration;
 - CI and CodeQL;

@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Replace OWNER placeholders with a GitHub account."
+        description="Replace parthoece placeholders with a GitHub account."
     )
     parser.add_argument("owner")
     args = parser.parse_args()
@@ -23,7 +23,7 @@ def main() -> int:
         except UnicodeDecodeError:
             continue
 
-        updated = text.replace("OWNER", args.owner)
+        updated = text.replace("parthoece", args.owner)
         if updated != text:
             path.write_text(updated, encoding="utf-8")
             changed += 1

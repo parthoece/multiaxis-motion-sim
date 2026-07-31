@@ -9,7 +9,7 @@ After publishing:
 
 ## General
 
-- Replace every `OWNER` placeholder.
+- Replace every `parthoece` placeholder.
 - Add repository topics: `motion-control`, `virtual-commissioning`, `linuxcnc`, `csharp`, `wpf`, `industrial-automation`, `simulation`.
 - Enable Issues and Discussions.
 - Delete merged branches automatically.

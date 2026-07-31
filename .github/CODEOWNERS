@@ -1,7 +1,7 @@
-* @OWNER
+* @parthoece
 
-/src/MotionControl.Domain/ @OWNER
-/src/MotionControl.Application/ @OWNER
-/configs/ @OWNER
-/gcode/ @OWNER
-/SECURITY.md @OWNER
+/src/MotionControl.Domain/ @parthoece
+/src/MotionControl.Application/ @parthoece
+/configs/ @parthoece
+/gcode/ @parthoece
+/SECURITY.md @parthoece

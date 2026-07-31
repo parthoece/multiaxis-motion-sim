@@ -7,7 +7,7 @@
 
 - Status: Proposed
 - Date: YYYY-MM-DD
-- Owners: @OWNER
+- Owners: @parthoece
 
 ## Context
 

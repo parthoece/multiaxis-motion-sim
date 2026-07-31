@@ -17,11 +17,11 @@
 ## 1. Clone and inspect
 
 ```bash
-git clone https://github.com/OWNER/multiaxis-motion-sim.git
+git clone https://github.com/parthoece/multiaxis-motion-sim.git
 cd multiaxis-motion-sim
 ```
 
-Before publishing a fork, replace the `OWNER` placeholders:
+Before publishing a fork, replace the `parthoece` placeholders:
 
 ```bash
 python scripts/replace_owner.py YOUR_GITHUB_USERNAME

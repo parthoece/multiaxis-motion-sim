@@ -11,7 +11,7 @@ Expected behavior includes technical honesty, reproducible evidence, respectful 
 
 Harassment, discrimination, threats, personal attacks, publishing private information, deliberate misinformation, and presenting unsafe or unverified physical claims as established facts are unacceptable.
 
-Report conduct concerns privately through the contact method on the `@OWNER` GitHub profile. Maintainers may remove content, issue warnings, restrict participation, or remove participants depending on severity.
+Report conduct concerns privately through the contact method on the `@parthoece` GitHub profile. Maintainers may remove content, issue warnings, restrict participation, or remove participants depending on severity.
 
 ---
 
