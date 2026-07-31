@@ -10,5 +10,6 @@
     <ProjectReference Include="../MotionControl.Application/MotionControl.Application.csproj" />
     <ProjectReference Include="../MotionControl.Simulation/MotionControl.Simulation.csproj" />
     <ProjectReference Include="../MotionControl.Persistence/MotionControl.Persistence.csproj" />
+    <ProjectReference Include="..\MotionControl.GrblHal\MotionControl.GrblHal.csproj" />
   </ItemGroup>
 </Project>
