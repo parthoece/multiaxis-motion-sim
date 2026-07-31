@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../MotionControl.Domain/MotionControl.Domain.csproj" />
+    <ProjectReference Include="../MotionControl.Application/MotionControl.Application.csproj" />
+    <ProjectReference Include="../MotionControl.Simulation/MotionControl.Simulation.csproj" />
+    <ProjectReference Include="../MotionControl.Persistence/MotionControl.Persistence.csproj" />
+  </ItemGroup>
+</Project>

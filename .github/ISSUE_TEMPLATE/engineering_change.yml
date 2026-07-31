@@ -1,0 +1,35 @@
+name: Engineering change
+description: Propose a requirement-backed feature or architecture change
+title: "[Change]: "
+labels: ["type: enhancement", "status: triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Engineering problem
+      description: What current equipment behavior is insufficient?
+    validations:
+      required: true
+  - type: textarea
+    id: requirement
+    attributes:
+      label: Requirement and acceptance criteria
+    validations:
+      required: true
+  - type: textarea
+    id: design
+    attributes:
+      label: Proposed design
+    validations:
+      required: true
+  - type: textarea
+    id: faults
+    attributes:
+      label: Failure scenarios and recovery
+    validations:
+      required: true
+  - type: textarea
+    id: dependency
+    attributes:
+      label: New dependencies
+      description: Explain why existing technology is insufficient, or write None.

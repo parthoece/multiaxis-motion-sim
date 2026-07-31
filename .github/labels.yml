@@ -1,0 +1,48 @@
+- name: "type: bug"
+  color: "d73a4a"
+  description: Reproducible incorrect behavior
+- name: "type: enhancement"
+  color: "a2eeef"
+  description: Requirement-backed improvement
+- name: "type: documentation"
+  color: "0075ca"
+  description: Documentation change
+- name: "type: test"
+  color: "5319e7"
+  description: Automated or manual verification
+- name: "area: domain"
+  color: "6f42c1"
+  description: State, recipes, alarms, and invariants
+- name: "area: application"
+  color: "0052cc"
+  description: Workflow and orchestration
+- name: "area: simulation"
+  color: "0e8a16"
+  description: Virtual plant and fault injection
+- name: "area: persistence"
+  color: "5319e7"
+  description: SQLite and diagnostics
+- name: "area: hmi"
+  color: "c5def5"
+  description: WPF operator interface
+- name: "area: linuxcnc"
+  color: "1d76db"
+  description: LinuxCNC, HAL, and G-code
+- name: "area: safety"
+  color: "b60205"
+  description: Permissives, stop, limits, and recovery
+- name: "dependencies"
+  color: "0366d6"
+  description: Dependency or supply-chain update
+- name: "status: triage"
+  color: "ededed"
+  description: Needs review
+- name: "status: blocked"
+  color: "000000"
+  description: Waiting on a dependency
+- name: "good first issue"
+  color: "7057ff"
+  description: Suitable for a first contribution
+- name: "help wanted"
+  color: "008672"
+  description: Assistance requested

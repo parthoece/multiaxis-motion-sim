@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If this software supports your engineering work, cite it using this metadata."
+title: "Virtual Multi-Axis Motion Control Platform"
+type: software
+authors:
+  - name: "multiaxis-motion-sim contributors"
+abstract: >-
+  A software-in-the-loop virtual commissioning platform for multi-axis
+  machine-control workflows, deterministic faults, and inspection simulation.
+repository-code: "https://github.com/OWNER/multiaxis-motion-sim"
+url: "https://github.com/OWNER/multiaxis-motion-sim"
+license: MIT
+version: 0.1.0
+date-released: 2026-07-28
+keywords:
+  - virtual commissioning
+  - motion control
+  - LinuxCNC
+  - industrial automation
+  - software in the loop
+  - C#
+  - WPF

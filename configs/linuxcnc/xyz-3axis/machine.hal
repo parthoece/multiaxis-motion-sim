@@ -1,0 +1,22 @@
+# Simulation-only HAL configuration.
+
+loadrt [KINS]KINEMATICS
+loadrt [EMCMOT]EMCMOT servo_period_nsec=[EMCMOT]SERVO_PERIOD num_joints=[KINS]JOINTS
+
+addf motion-command-handler servo-thread
+addf motion-controller servo-thread
+
+# Loop commanded joint positions back as feedback.
+net x-position-loop joint.0.motor-pos-cmd => joint.0.motor-pos-fb
+net y-position-loop joint.1.motor-pos-cmd => joint.1.motor-pos-fb
+net z-position-loop joint.2.motor-pos-cmd => joint.2.motor-pos-fb
+
+# Simulation E-stop loop.
+net estop-loop iocontrol.0.user-enable-out => iocontrol.0.emc-enable-in
+
+# Simulated tool-change loop.
+net tool-prepare-loop iocontrol.0.tool-prepare => iocontrol.0.tool-prepared
+net tool-change-loop iocontrol.0.tool-change => iocontrol.0.tool-changed
+
+# Probe remains inactive until a virtual surface model is added.
+sets motion.probe-input FALSE

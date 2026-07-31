@@ -1,0 +1,7 @@
+* @OWNER
+
+/src/MotionControl.Domain/ @OWNER
+/src/MotionControl.Application/ @OWNER
+/configs/ @OWNER
+/gcode/ @OWNER
+/SECURITY.md @OWNER

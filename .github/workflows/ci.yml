@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "10.0.x"
+          cache: true
+          cache-dependency-path: |
+            Directory.Packages.props
+            **/*.csproj
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build console application
+        run: dotnet build src/MotionControl.OperatorConsole --configuration Release --no-restore
+
+      - name: Test domain
+        run: dotnet test tests/MotionControl.Domain.Tests --configuration Release --no-restore
+
+      - name: Test application
+        run: dotnet test tests/MotionControl.Application.Tests --configuration Release --no-restore
+
+      - name: Test persistence
+        run: dotnet test tests/MotionControl.IntegrationTests --configuration Release --no-restore
+
+      - name: Validate documentation
+        run: python scripts/check_docs.py
+
+      - name: Validate architecture boundaries
+        run: python scripts/check_architecture.py
+
+      - name: Run normal scenario
+        run: dotnet run --project src/MotionControl.OperatorConsole --configuration Release --no-restore -- normal
+
+      - name: Run operator-stop scenario
+        run: dotnet run --project src/MotionControl.OperatorConsole --configuration Release --no-restore -- operator-stop
+
+      - name: Verify expected fault scenario
+        shell: bash
+        run: |
+          set +e
+          dotnet run --project src/MotionControl.OperatorConsole --configuration Release --no-restore -- probe-timeout
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo "Probe timeout should return non-zero."
+            exit 1
+          fi

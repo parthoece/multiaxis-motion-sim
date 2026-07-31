@@ -1,0 +1,57 @@
+name: Bug report
+description: Report reproducible incorrect simulation or software behavior
+title: "[Bug]: "
+labels: ["type: bug", "status: triage"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Commit or release
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Domain and state machine
+        - Application workflow
+        - Motion simulation
+        - Virtual PLC
+        - Persistence
+        - WPF HMI
+        - LinuxCNC profile
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and logs
+    validations:
+      required: true
+  - type: dropdown
+    id: safety
+    attributes:
+      label: Safety or recovery impact
+      options:
+        - None
+        - Unknown
+        - Homing or limit behavior
+        - Unexpected motion command
+        - Permissive or interlock behavior
+        - Stop or recovery behavior
+    validations:
+      required: true
