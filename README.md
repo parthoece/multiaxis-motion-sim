@@ -10,107 +10,65 @@
 [![Windows HMI](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/windows-hmi.yml/badge.svg)](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/windows-hmi.yml)
 [![CodeQL](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/codeql.yml/badge.svg)](https://github.com/parthoece/multiaxis-motion-sim/actions/workflows/codeql.yml)
 [![.NET 10](https://img.shields.io/badge/.NET-10.0-512BD4)](global.json)
-[![grblHAL](https://img.shields.io/badge/grblHAL-TCP%20simulator-275DAD)](#software-only-grblhal-backend)
-[![LinuxCNC](https://img.shields.io/badge/LinuxCNC-independent%20profile-2F74C0)](configs/linuxcnc/)
+[![grblHAL](https://img.shields.io/badge/grblHAL-TCP%20simulator-275DAD)](#grblhal-software-backend)
+[![LinuxCNC](https://img.shields.io/badge/LinuxCNC-simulation%20profile-2F74C0)](#linuxcnc-simulation-profile)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
-[![Simulation only](https://img.shields.io/badge/hardware-simulation%20only-blue)](#scope-boundary)
+[![Simulation only](https://img.shields.io/badge/hardware-simulation%20only-blue)](#scope-and-safety-boundary)
 
 > **Test industrial machine-control software before the physical machine exists.**
 
-A software-in-the-loop virtual commissioning platform for deterministic XYZ motion, machine-state control, inspection workflows, fault injection, cancellation, recovery, persistence, and operator-interface testing.
+A software-in-the-loop virtual commissioning platform for deterministic XYZ motion, machine-state control, inspection workflows, fault injection, operator cancellation, recovery, persistence, and HMI testing.
 
-Built with **C#/.NET, WPF, SQLite, xUnit, a TCP-connected grblHAL software simulator, and an independent LinuxCNC simulation profile**.
-
----
-
-## Explore the project
-
-| I want to… | Start here |
-| --- | --- |
-| Run a complete inspection cycle | [Run the normal scenario](#run-the-normal-scenario) |
-| Reproduce a machine fault | [Inject a fault](#inject-a-fault) |
-| Test operator Stop behavior | [Test operator Stop](#test-operator-stop) |
-| Launch the Windows HMI | [Run the WPF HMI](#run-the-wpf-hmi) |
-| Run the real grblHAL controller core in software | [Use the grblHAL backend](#software-only-grblhal-backend) |
-| Understand the extension points | [Explore the architecture](#extensible-architecture) |
-| Explore the LinuxCNC profile | [Open the LinuxCNC section](#linuxcnc-simulation-profile) |
-| Review verification coverage | [Go to testing](#testing-and-verification) |
+Built with **C#/.NET, WPF, SQLite, xUnit, grblHAL Simulator, and LinuxCNC simulation tooling**.
 
 ---
 
-## The problem
+## Why this project exists
 
-Industrial machine-control software is often validated only after the mechanical structure, electrical system, controller, sensors, PLC signals, and operator station have been assembled.
+Industrial control software is often tested only after the machine, electrical system, PLC, controller, sensors, and operator station have been assembled.
 
-That creates several problems:
+At that stage:
 
-- software defects become mixed with wiring, sensor, controller, and mechanical failures;
-- access to the machine is limited and shared across engineering teams;
-- every software correction may require another commissioning session;
-- failures are discovered late, when they are more expensive to correct;
-- abnormal conditions may be disruptive or unsafe to reproduce repeatedly.
+* software defects are difficult to separate from wiring, sensor, controller, and mechanical problems;
+* machine access is limited and shared across engineering teams;
+* every correction may require another commissioning session;
+* failures are discovered late, when they are more expensive to fix;
+* abnormal conditions may be unsafe or disruptive to reproduce repeatedly.
 
-Typical examples include a probe that does not trigger, incomplete homing, E-stop activation, communication loss, missing process permissives, operator cancellation, and movement approaching a configured software limit.
+This project moves a significant part of that validation earlier.
 
-## The solution
-
-This project provides a deterministic virtual machine and replaceable motion backends so equipment-software behavior can be tested before physical hardware is available.
-
-It combines:
-
-- a C#/.NET equipment-control application;
-- a deterministic virtual Cartesian XYZ machine;
-- a TCP adapter for the open-source grblHAL software simulator;
-- simulated PLC permissives and process signals;
-- versioned inspection recipes;
-- repeatable fault injection;
-- asynchronous cancellation and Stop handling;
-- explicit alarm, reset, and recovery policies;
-- SQLite operational history;
-- JSON Lines diagnostic events;
-- a Windows WPF operator interface;
-- an independent LinuxCNC simulation profile.
-
-The objective is not simply to animate three axes. It is to verify that the complete equipment workflow remains **controlled, diagnosable, replaceable, and recoverable** during normal and abnormal operation.
+It provides a deterministic virtual machine and replaceable motion backends so equipment workflows can be exercised before physical hardware is available.
 
 ---
 
-## What can be demonstrated
+## What this project demonstrates
 
-| Demonstration | Evidence |
-| --- | --- |
-| Deterministic workflow testing | Repeatable state transitions, faults, alarms, and recovery |
-| External controller integration | TCP commands and live `MPos` status from grblHAL Simulator |
-| Controller independence | The same application workflow uses multiple `IMotionController` backends |
-| Operator interaction | State-aware WPF commands, live XYZ status, warnings, alarms, and measurements |
-| Persistence | SQLite cycles, measurements, transitions, and alarms |
-| Diagnostics | Append-friendly JSON Lines events |
-| Recovery policy | Fault-specific reset targets and explicit rehoming requirements |
-| Extension design | Replaceable motion, PLC, persistence, logging, time, and validation dependencies |
+| Engineering area       | Demonstrated capability                                                                          |
+| ---------------------- | ------------------------------------------------------------------------------------------------ |
+| Equipment architecture | Separation between presentation, workflows, domain rules, adapters, persistence, and diagnostics |
+| Motion control         | Deterministic XYZ simulation and TCP-connected grblHAL integration                               |
+| Machine-state design   | Explicit initialization, homing, automatic operation, fault, reset, and recovery behavior        |
+| Fault handling         | Repeatable probe, PLC, E-stop, permissive, cancellation, and limit-related scenarios             |
+| Asynchronous control   | Active-operation cancellation, Stop handling, and command-conflict prevention                    |
+| Recovery policy        | Fault-specific reset targets and explicit rehoming requirements                                  |
+| Operator interface     | State-aware WPF commands, live position, alarms, warnings, and measurement status                |
+| Persistence            | SQLite history for cycles, measurements, transitions, and alarms                                 |
+| Diagnostics            | Append-friendly JSON Lines event records                                                         |
+| Testability            | Deterministic scenarios, xUnit coverage, architecture checks, and documentation validation       |
+| Extensibility          | Replaceable controller, PLC, storage, logging, timing, and validation dependencies               |
+
+The goal is not simply to animate three axes. The goal is to verify that the complete equipment workflow remains **controlled, diagnosable, replaceable, and recoverable** during normal and abnormal operation.
 
 ---
 
-## Try it
+## Quick demonstration
 
-### Requirements
-
-- .NET SDK `10.0.302`, or a compatible SDK selected through `global.json`
-- Git
-- Windows 10 or 11 for the WPF HMI
-- Python 3.10 or later for optional repository checks
-- A locally built grblHAL Simulator executable for the optional grblHAL backend
-- LinuxCNC only for the independent LinuxCNC profile
-
-### Clone the repository
+Run the default deterministic scenario:
 
 ```bash
 git clone https://github.com/parthoece/multiaxis-motion-sim.git
 cd multiaxis-motion-sim
-```
 
-### Run the normal scenario
-
-```bash
 dotnet restore
 dotnet run --project src/MotionControl.OperatorConsole -- normal
 ```
@@ -130,38 +88,38 @@ OFF
 During the cycle, the virtual machine:
 
 1. verifies startup permissives;
-2. homes Z, X, and Y;
+2. homes the Z, X, and Y axes;
 3. loads a five-point inspection recipe;
 4. moves above each inspection point;
 5. probes the virtual surface;
-6. evaluates tolerances;
+6. evaluates measurement tolerances;
 7. stores the completed cycle and measurements.
 
-Console operational data is written under `.runtime/`.
+Operational data is written under `.runtime/`.
 
 ---
 
-## Pick a scenario
+## Demo scenarios
 
-Each scenario is deterministic. Repeating the same scenario should produce the same state transitions, alarm, recovery target, and diagnostic evidence.
+Each scenario is deterministic. Repeating the same command should produce the same state transitions, primary alarm, recovery target, and diagnostic evidence.
 
-| Scenario | Command | What to observe |
-| --- | --- | --- |
-| Successful inspection | `normal` | Five measurements and a completed cycle |
-| Operator Stop | `operator-stop` | Active-operation cancellation and deliberate recovery |
-| Probe timeout | `probe-timeout` | Preserved primary alarm and required rehoming |
-| Missing part | `part-missing` | Cycle permissive rejection |
-| E-stop activation | `estop` | Faulted state and invalidated homing |
-| PLC communication loss | `plc-loss` | Communication-fault handling |
-| Out of tolerance | `out-of-tolerance` | Completed inspection with a failed process result |
+| Scenario               | Command            | Expected result                                            |
+| ---------------------- | ------------------ | ---------------------------------------------------------- |
+| Successful inspection  | `normal`           | Five measurements and a completed cycle                    |
+| Operator Stop          | `operator-stop`    | Active workflow cancellation and controlled recovery       |
+| Probe timeout          | `probe-timeout`    | Preserved primary alarm and required rehoming              |
+| Missing part           | `part-missing`     | Cycle rejected because a process permissive is unavailable |
+| E-stop activation      | `estop`            | Faulted state and invalidated homing                       |
+| PLC communication loss | `plc-loss`         | Communication-fault handling                               |
+| Out of tolerance       | `out-of-tolerance` | Completed inspection with a failed process result          |
 
-Run any scenario with:
+Run a scenario with:
 
 ```bash
 dotnet run --project src/MotionControl.OperatorConsole -- <scenario>
 ```
 
-For example:
+Example:
 
 ```bash
 dotnet run --project src/MotionControl.OperatorConsole -- probe-timeout
@@ -171,25 +129,26 @@ dotnet run --project src/MotionControl.OperatorConsole -- probe-timeout
 
 ---
 
-## Inject a fault
+## Fault handling and recovery
 
 A failure should be reproducible before it becomes a regression test.
 
 ```mermaid
 flowchart LR
-    A[Inject timeout]
-    B[Probe fails]
-    C[Cancel motion<br/>Enter Faulted]
-    D[Preserve alarm<br/>Reset and rehome]
+    A[Inject probe timeout]
+    B[Probe does not trigger]
+    C[Cancel active motion]
+    D[Enter Faulted]
+    E[Preserve primary alarm]
+    F[Reset and rehome]
 
-    A --> B --> C --> D
+    A --> B --> C --> D --> E --> F
 ```
 
-<details>
-<summary><strong>View the complete fault sequence</strong></summary>
+### Probe-timeout sequence
 
-1. Enable probe-timeout injection.
-2. Start the inspection.
+1. Probe-timeout injection is enabled.
+2. The inspection begins.
 3. The simulated probe does not trigger.
 4. Active motion is cancelled.
 5. The machine enters `Faulted`.
@@ -197,13 +156,9 @@ flowchart LR
 7. Reset returns the machine to `NotHomed`.
 8. Rehoming is required before another automatic cycle.
 
-A secondary cancellation or cleanup event must not replace the original machine fault.
+A secondary cancellation or cleanup event must never replace the original machine fault.
 
-</details>
-
----
-
-## Test operator Stop
+### Operator Stop sequence
 
 ```bash
 dotnet run --project src/MotionControl.OperatorConsole -- operator-stop
@@ -222,49 +177,65 @@ Automatic motion
 → machine returns to Ready
 ```
 
-The deterministic scenario exits successfully only when cancellation and recovery behavior are verified.
-
-The grblHAL backend applies a stricter policy after an abort: controller position is treated as untrusted and rehoming is required.
+The grblHAL backend applies a stricter policy after an abort. Controller position is treated as untrusted, so rehoming is required.
 
 ---
 
-## Extensible architecture
+## Architecture
 
-The system separates machine workflows from controller, I/O, storage, diagnostics, time, and validation technologies.
+The system separates machine workflows from controller communication, process I/O, persistence, diagnostics, timing, and validation technologies.
 
 ```mermaid
 flowchart LR
     UI[WPF HMI or Console]
     COORD[MachineCoordinator]
     SERVICES[Lifecycle · Inspection<br/>Stop · Status]
-    SEAMS[Injected contracts<br/>and policies]
+    CONTRACTS[Injected contracts<br/>and policies]
     ADAPTERS[Replaceable adapters<br/>and implementations]
 
     UI --> COORD
     COORD --> SERVICES
-    SERVICES --> SEAMS
-    SEAMS --> ADAPTERS
+    SERVICES --> CONTRACTS
+    CONTRACTS --> ADAPTERS
 ```
 
-`MachineCoordinator` remains the presentation-facing facade. New workflows should be introduced as dedicated application services rather than embedding controller-specific behavior in the UI or domain model.
+`MachineCoordinator` acts as the presentation-facing facade.
 
-### Extension map
+New workflows should be implemented as dedicated application services rather than placing controller-specific behavior in the UI or domain model.
 
-| Layer or seam | Current implementation | Extension examples |
-| --- | --- | --- |
-| Presentation | WPF HMI, operator console | Web HMI, maintenance console, automated commissioning client |
-| Application workflows | Lifecycle, inspection, Stop, status | Manual jog, calibration, maintenance, recipe management, alarm history |
-| Motion control | `IMotionController` | Deterministic simulator, grblHAL, LinuxCNC, physical controller adapters |
-| PLC and process I/O | Virtual PLC gateway | OPC UA, EtherNet/IP, Modbus TCP, hardware PLC gateway |
-| Operational storage | SQLite store | Alternative local store, remote database, export pipeline |
-| Diagnostic events | JSON Lines event log | Structured telemetry, OpenTelemetry, centralized logging |
-| Time | System clock | Fake clock, replay clock, accelerated simulation clock |
-| Recipe rules | Recipe validator | Product-specific validation policies, schema versions, external recipe source |
-| Fault and recovery policy | Domain rules and fault context | Controller-specific recovery constraints, machine-profile policies |
+### Application responsibilities
 
-> `IMotionController` is the implemented motion contract. Other constructor-injected services and policies are deliberate extension seams that can be formalized further as additional implementations are introduced.
+| Component          | Responsibility                                                    |
+| ------------------ | ----------------------------------------------------------------- |
+| Lifecycle service  | Initialization, homing, reset, and recovery                       |
+| Inspection service | Recipe execution, probing, measurements, and tolerance evaluation |
+| Stop service       | Active-operation cancellation and completion confirmation         |
+| Status service     | Continuous machine, axis, signal, alarm, and measurement status   |
+| Command gate       | Prevents conflicting machine commands                             |
+| Active operation   | Tracks and cancels the current asynchronous workflow              |
+| Fault context      | Preserves the primary fault and required recovery target          |
+| Persistence        | Stores transitions, alarms, cycles, and measurements              |
+| Event log          | Writes append-friendly JSON Lines events                          |
 
-### Motion backends
+### Extension points
+
+| Layer or seam         | Current implementation              | Possible extensions                                              |
+| --------------------- | ----------------------------------- | ---------------------------------------------------------------- |
+| Presentation          | WPF HMI, operator console           | Web HMI, maintenance console, commissioning client               |
+| Application workflows | Lifecycle, inspection, Stop, status | Jogging, calibration, maintenance, recipe management             |
+| Motion control        | `IMotionController`                 | Deterministic simulator, grblHAL, LinuxCNC, physical controller  |
+| PLC and process I/O   | Virtual PLC gateway                 | OPC UA, EtherNet/IP, Modbus TCP                                  |
+| Operational storage   | SQLite                              | Remote database, alternative local store, export pipeline        |
+| Diagnostics           | JSON Lines                          | OpenTelemetry, centralized logging, structured telemetry         |
+| Time                  | System clock                        | Fake clock, replay clock, accelerated simulation clock           |
+| Recipe validation     | Recipe validator                    | Product-specific rules, external recipe sources, schema versions |
+| Recovery rules        | Domain policies and fault context   | Controller-specific and machine-profile policies                 |
+
+See [Architecture](docs/ARCHITECTURE.md) for the complete design.
+
+---
+
+## Motion backends
 
 ```mermaid
 flowchart LR
@@ -280,37 +251,18 @@ flowchart LR
     CONTRACT -. future .-> LINUX
 ```
 
-Two backends are currently available:
+Two application backends are currently available:
 
-- `DeterministicMotionController` for repeatable application-level testing;
-- `GrblHalMotionController` for communication with the genuine grblHAL controller core through TCP.
+* `DeterministicMotionController` for repeatable application-level testing;
+* `GrblHalMotionController` for TCP communication with the grblHAL controller core.
 
-The independent LinuxCNC profile remains a future adapter target.
-
-<details>
-<summary><strong>Explore current application responsibilities</strong></summary>
-
-| Component | Responsibility |
-| --- | --- |
-| Lifecycle service | Initialization, homing, reset, and recovery |
-| Inspection service | Recipe execution, probing, measurements, and tolerance evaluation |
-| Stop service | Active-operation cancellation and completion confirmation |
-| Status service | Continuous machine, axis, signal, alarm, and measurement status |
-| Command gate | Prevents conflicting machine commands |
-| Active operation | Tracks and cancels the current asynchronous workflow |
-| Fault context | Preserves the primary fault and required recovery target |
-| Persistence | Stores transitions, alarms, cycles, and measurements |
-| Event log | Writes append-friendly JSON Lines diagnostic events |
-
-See [Architecture](docs/ARCHITECTURE.md) for the complete design.
-
-</details>
+The LinuxCNC profile currently runs independently and remains a future adapter target.
 
 ---
 
-## Run the WPF HMI
+## Windows WPF HMI
 
-Run the Windows operator interface with the default deterministic backend:
+Run the operator interface with the default deterministic backend:
 
 ```powershell
 dotnet run --project src/MotionControl.Hmi.Wpf
@@ -318,34 +270,31 @@ dotnet run --project src/MotionControl.Hmi.Wpf
 
 The HMI provides:
 
-- state-aware command availability;
-- continuous XYZ position status;
-- movement indication;
-- permissive and alarm summaries;
-- operational-warning status;
-- recent inspection measurements;
-- deterministic probe-timeout controls.
+* state-aware command availability;
+* continuous XYZ position reporting;
+* movement indication;
+* permissive and alarm summaries;
+* operational warnings;
+* recent inspection measurements;
+* deterministic probe-timeout controls.
 
-WPF operational data is stored under the current user’s local application-data directory.
+WPF operational data is stored in the current user’s local application-data directory.
 
-<details>
-<summary><strong>Suggested deterministic HMI demonstration</strong></summary>
+### Suggested HMI demonstration
 
 1. Select **Initialize**.
 2. Select **Home All**.
-3. Confirm the machine reaches `Ready`.
+3. Confirm that the machine reaches `Ready`.
 4. Run a normal inspection.
 5. Review the five measurements.
 6. Enable probe-timeout injection.
 7. Start another inspection.
-8. Observe cancellation and the preserved alarm.
+8. Observe cancellation and the preserved primary alarm.
 9. Reset the machine.
 10. Rehome and return to `Ready`.
 
-</details>
-
 <!--
-Optional: add a real screenshot or short GIF when available.
+Add a real screenshot or short GIF when available.
 
 <p align="center">
   <img src="docs/assets/hmi-demo.gif"
@@ -356,9 +305,9 @@ Optional: add a real screenshot or short GIF when available.
 
 ---
 
-## Software-only grblHAL backend
+## grblHAL software backend
 
-The WPF application can run against the open-source grblHAL controller core without a microcontroller, drives, motors, or physical machine.
+The WPF application can run against the open-source grblHAL controller core without a microcontroller, motors, drives, or physical machine.
 
 ```text
 WPF HMI
@@ -372,21 +321,21 @@ GrblHalMotionController
 grblHAL Simulator
 ```
 
-### What is genuine and what is modeled
+### Genuine and modeled behavior
 
-| Behavior | Source |
-| --- | --- |
-| G-code parsing and planning | grblHAL Simulator |
-| XYZ movement execution | grblHAL Simulator |
-| Controller state | grblHAL Simulator |
-| `MPos` position reports | grblHAL Simulator |
-| Status query, feed hold, and soft reset | grblHAL real-time protocol |
-| Home-switch activation | Modeled by the .NET adapter in software-only mode |
-| Probe contact | Modeled by the .NET adapter in software-only mode |
-| Machine workflow and recovery | .NET application and domain rules |
-| Persistence and diagnostics | SQLite and JSON Lines |
+| Behavior                                | Source                            |
+| --------------------------------------- | --------------------------------- |
+| G-code parsing and planning             | grblHAL Simulator                 |
+| XYZ movement execution                  | grblHAL Simulator                 |
+| Controller state                        | grblHAL Simulator                 |
+| `MPos` position reports                 | grblHAL Simulator                 |
+| Status query, feed hold, and soft reset | grblHAL real-time protocol        |
+| Home-switch activation                  | Modeled by the .NET adapter       |
+| Probe contact                           | Modeled by the .NET adapter       |
+| Machine workflow and recovery           | .NET application and domain rules |
+| Persistence and diagnostics             | SQLite and JSON Lines             |
 
-### Build or obtain grblHAL Simulator
+### Prepare the simulator
 
 The simulator executable is not committed to this repository.
 
@@ -396,12 +345,10 @@ Build the upstream grblHAL Simulator separately, then place the Windows executab
 tools/grblhal-sim/bin/grblHAL_sim.exe
 ```
 
-A typical local build uses MSYS2 UCRT64, CMake, Ninja, GCC, and the upstream simulator source.
-
 <details>
-<summary><strong>Example local build commands</strong></summary>
+<summary><strong>Example MSYS2 build</strong></summary>
 
-Run these commands in an **MSYS2 UCRT64** terminal:
+Run in an **MSYS2 UCRT64** terminal:
 
 ```bash
 pacman -S --needed \
@@ -424,7 +371,7 @@ cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
 cmake --build build --parallel
 ```
 
-Copy the resulting executable into this repository:
+Copy the resulting executable:
 
 ```powershell
 New-Item -ItemType Directory -Force `
@@ -436,19 +383,17 @@ Copy-Item `
     -Force
 ```
 
-The local executable and `EEPROM.DAT` are ignored by Git.
+The executable and `EEPROM.DAT` are ignored by Git.
 
 </details>
 
-### Start grblHAL Simulator
-
-Open the first PowerShell terminal:
+### Start the simulator
 
 ```powershell
 .\tools\grblhal-sim\bin\grblHAL_sim.exe -p 23000
 ```
 
-Leave it running.
+Leave the process running.
 
 ### Verify the TCP protocol
 
@@ -461,13 +406,13 @@ powershell -NoProfile -ExecutionPolicy Bypass `
 
 The smoke test verifies:
 
-- TCP connection to `127.0.0.1:23000`;
-- the grblHAL startup banner;
-- `$I` controller information;
-- the real-time `?` status response;
-- an `Idle` report containing XYZ `MPos`.
+* TCP connectivity to `127.0.0.1:23000`;
+* the grblHAL startup banner;
+* `$I` controller information;
+* the real-time `?` status response;
+* an `Idle` report containing XYZ `MPos`.
 
-### Run the WPF application with grblHAL
+### Run the HMI with grblHAL
 
 ```powershell
 $env:MOTION_BACKEND = "grblhal"
@@ -479,18 +424,17 @@ dotnet run --project src/MotionControl.Hmi.Wpf
 
 The adapter currently supports:
 
-- TCP initialization;
-- millimetre and absolute-position modes;
-- XYZ G-code movement;
-- real-time status and machine-position reporting;
-- feed hold and soft reset;
-- software-only homing;
-- software-modeled probe contact;
-- integration with the existing state, alarm, persistence, and HMI layers.
+* TCP initialization;
+* millimetre and absolute-position modes;
+* XYZ G-code movement;
+* live controller-state and machine-position reporting;
+* motion-completion monitoring;
+* feed hold and soft reset;
+* software-only homing;
+* software-modeled probe contact;
+* integration with machine states, alarms, persistence, diagnostics, and the HMI.
 
 ### Return to the deterministic backend
-
-Close the HMI, then clear the environment variables:
 
 ```powershell
 Remove-Item Env:MOTION_BACKEND -ErrorAction SilentlyContinue
@@ -501,99 +445,54 @@ dotnet run --project src/MotionControl.Hmi.Wpf
 ```
 
 <details>
-<summary><strong>Software-only grblHAL boundary</strong></summary>
+<summary><strong>grblHAL validation boundary</strong></summary>
 
 This integration validates:
 
-- TCP communication with the real grblHAL controller core;
-- G-code command formatting and acknowledgement;
-- controller status parsing;
-- `MPos` mapping into application axis positions;
-- motion completion monitoring;
-- feed hold and reset behavior;
-- adapter selection through configuration;
-- integration with machine states, persistence, diagnostics, and the WPF HMI.
+* TCP communication with the grblHAL controller core;
+* G-code command formatting and acknowledgement;
+* controller-status parsing;
+* `MPos` mapping into application axis positions;
+* motion-completion monitoring;
+* feed-hold and reset behavior;
+* backend selection through configuration;
+* integration with machine states, persistence, diagnostics, and the WPF HMI.
 
 It does not validate:
 
-- electrical home-switch signals;
-- electrical probe signals;
-- step-pulse timing on a microcontroller;
-- motors, drives, encoders, or mechanics;
-- physical limits or collision behavior;
-- positioning accuracy;
-- functional safety.
+* electrical home-switch or probe signals;
+* microcontroller step-pulse timing;
+* motors, drives, encoders, or mechanics;
+* physical limit or collision behavior;
+* positioning accuracy;
+* functional safety.
 
 </details>
 
 ---
 
-## LinuxCNC simulation profile
-
-Run the independent LinuxCNC profile on a LinuxCNC system:
-
-```bash
-linuxcnc configs/linuxcnc/xyz-3axis/machine.ini
-```
-
-The profile includes:
-
-- three simulated Cartesian axes;
-- homing configuration;
-- configured software limits;
-- HAL configuration;
-- coordinated-motion programs;
-- probing G-code.
-
-The LinuxCNC profile is currently independent of the .NET application.
-
-A future `LinuxCncMotionController` adapter is planned to implement `IMotionController` without changing equipment-domain rules.
-
-<details>
-<summary><strong>Why keep LinuxCNC behind an adapter?</strong></summary>
-
-The application should not contain controller-specific rules.
-
-The adapter boundary allows the same machine workflow to operate with:
-
-- the deterministic in-process simulator;
-- grblHAL Simulator;
-- LinuxCNC;
-- a future physical motion controller.
-
-Controller communication can change without rewriting machine states, recipes, alarm policy, or recovery behavior.
-
-</details>
-
----
-
-## Diagnostics and operational evidence
+## Persistence and diagnostics
 
 The platform records two complementary forms of evidence:
 
-| Store | Purpose |
-| --- | --- |
-| SQLite | Transactional machine transitions, alarms, cycles, and measurements |
-| JSON Lines | Append-friendly diagnostic events for troubleshooting and inspection |
+| Store      | Purpose                                                                |
+| ---------- | ---------------------------------------------------------------------- |
+| SQLite     | Transactional records of transitions, alarms, cycles, and measurements |
+| JSON Lines | Append-friendly diagnostic events for troubleshooting and inspection   |
 
-This supports both structured operational history and portable event-level diagnostics.
+Together, they provide both structured operational history and portable event-level diagnostics.
 
-<details>
-<summary><strong>What should be diagnosable after a failure?</strong></summary>
+After a failure, the recorded evidence should make it possible to determine:
 
-A repeatable fault should leave enough evidence to answer:
-
-- Which command was active?
-- Which permissive or signal changed?
-- Which motion backend was selected?
-- What was the primary alarm?
-- Was active motion cancelled?
-- Which machine state followed?
-- What recovery target was selected?
-- Was rehoming required?
-- Which secondary warnings occurred?
-
-</details>
+* which command was active;
+* which permissive or signal changed;
+* which motion backend was selected;
+* which alarm was primary;
+* whether active motion was cancelled;
+* which machine state followed;
+* which recovery target was selected;
+* whether rehoming was required;
+* which secondary warnings occurred.
 
 ---
 
@@ -605,7 +504,7 @@ Run the complete .NET test suite:
 dotnet test
 ```
 
-Run individual test projects:
+Run individual projects:
 
 ```bash
 dotnet test tests/MotionControl.Domain.Tests
@@ -626,7 +525,7 @@ On a compatible shell:
 ./scripts/check.sh
 ```
 
-Run the manual grblHAL TCP smoke test while the simulator is listening:
+Run the manual grblHAL smoke test while the simulator is listening:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass `
@@ -635,21 +534,22 @@ powershell -NoProfile -ExecutionPolicy Bypass `
 
 Verification coverage includes:
 
-- domain rules and machine-state transitions;
-- initialization and homing;
-- inspection workflows;
-- cancellation and Stop behavior;
-- primary-fault preservation and recovery;
-- continuous status reporting;
-- SQLite persistence;
-- JSON Lines diagnostics;
-- architecture dependency rules;
-- documentation integrity;
-- manual communication with the grblHAL software simulator.
+* domain rules and machine-state transitions;
+* initialization and homing;
+* inspection workflows;
+* cancellation and Stop behavior;
+* primary-fault preservation;
+* reset and recovery policy;
+* continuous status reporting;
+* SQLite persistence;
+* JSON Lines diagnostics;
+* architecture dependency rules;
+* documentation integrity;
+* manual grblHAL TCP communication.
 
-> The normal automated test suite does not require a locally running grblHAL process. Dedicated fake-transport and controller-contract tests are the next reliability milestone.
+> The standard automated test suite does not require a locally running grblHAL process. Fake-transport tests and shared `IMotionController` contract tests are the next reliability milestones.
 
-The workflow badges at the top of this README show the latest authoritative CI, Windows HMI, and CodeQL status.
+The workflow badges at the top of this README show the current CI, Windows HMI, and CodeQL status.
 
 ---
 
@@ -657,32 +557,47 @@ The workflow badges at the top of this README show the latest authoritative CI, 
 
 Reset does not automatically restart motion.
 
-<details>
-<summary><strong>View recovery targets</strong></summary>
+| Fault condition               | Recovery target                        |
+| ----------------------------- | -------------------------------------- |
+| Missing part                  | `Ready`                                |
+| Air pressure unavailable      | `Ready`                                |
+| Operator cancellation         | `Ready` with the deterministic backend |
+| External-controller abort     | `NotHomed`                             |
+| Probe timeout                 | `NotHomed`                             |
+| Homing failure                | `NotHomed`                             |
+| Software-limit violation      | `NotHomed`                             |
+| E-stop activation             | `NotHomed`                             |
+| Motion controller unavailable | `Off`                                  |
+| Unexpected startup failure    | `Off`                                  |
 
-| Fault condition | Recovery target |
-| --- | --- |
-| Missing part | `Ready` |
-| Air pressure unavailable | `Ready` |
-| Operator cancellation | `Ready` in the deterministic simulator |
-| External-controller abort | `NotHomed` |
-| Probe timeout | `NotHomed` |
-| Homing failure | `NotHomed` |
-| Software-limit violation | `NotHomed` |
-| E-stop activation | `NotHomed` |
-| Motion controller unavailable | `Off` |
-| Unexpected startup failure | `Off` |
-
-The grblHAL backend intentionally applies stricter recovery after a feed hold followed by soft reset because the application no longer treats the controller position as trusted.
-
-</details>
+The grblHAL backend applies stricter recovery after a feed hold followed by soft reset because the application no longer treats the reported controller position as trustworthy.
 
 ---
 
-## Repository map
+## LinuxCNC simulation profile
 
-<details>
-<summary><strong>Open repository structure</strong></summary>
+Run the independent LinuxCNC profile on a LinuxCNC system:
+
+```bash
+linuxcnc configs/linuxcnc/xyz-3axis/machine.ini
+```
+
+The profile includes:
+
+* three simulated Cartesian axes;
+* homing configuration;
+* configured software limits;
+* HAL configuration;
+* coordinated-motion programs;
+* probing G-code.
+
+The profile currently operates independently of the .NET application.
+
+A future `LinuxCncMotionController` adapter is planned to implement `IMotionController` without changing equipment-domain rules.
+
+---
+
+## Repository structure
 
 ```text
 multiaxis-motion-sim/
@@ -690,7 +605,7 @@ multiaxis-motion-sim/
 │   ├── MotionControl.Domain/
 │   ├── MotionControl.Application/
 │   ├── MotionControl.Simulation/
-│   ├── MotionControl.GrblHal/         # TCP adapter for grblHAL Simulator
+│   ├── MotionControl.GrblHal/
 │   ├── MotionControl.Persistence/
 │   ├── MotionControl.OperatorConsole/
 │   └── MotionControl.Hmi.Wpf/
@@ -700,7 +615,7 @@ multiaxis-motion-sim/
 │   └── MotionControl.IntegrationTests/
 ├── tools/
 │   └── grblhal-sim/
-│       └── bin/                       # Local executable; ignored by Git
+│       └── bin/
 ├── configs/linuxcnc/
 ├── gcode/
 ├── docs/
@@ -709,60 +624,86 @@ multiaxis-motion-sim/
 └── .github/
 ```
 
-</details>
+---
+
+## Requirements
+
+* .NET SDK `10.0.302`, or a compatible SDK selected through `global.json`
+* Git
+* Windows 10 or 11 for the WPF HMI
+* Python 3.10 or later for optional repository checks
+* A locally built grblHAL Simulator executable for the grblHAL backend
+* LinuxCNC for the independent LinuxCNC profile
+
+See [Getting Started](docs/GETTING_STARTED.md) for detailed installation and execution instructions.
 
 ---
 
-## Project direction
+## Project roadmap
 
-Current development priorities include:
+Current priorities include:
 
-- adding fake-transport tests for the grblHAL protocol adapter;
-- adding shared `IMotionController` contract tests;
-- exposing the selected motion backend in the HMI;
-- improving disconnect and reconnect handling;
-- completing the WPF manual test matrix;
-- verifying the LinuxCNC profile in its target environment;
-- adding alarm-history and recipe-management interfaces;
-- implementing the .NET-to-LinuxCNC adapter;
-- evaluating real controller I/O after the software-only path is stable.
+* adding fake-transport tests for the grblHAL protocol adapter;
+* adding shared `IMotionController` contract tests;
+* exposing the selected motion backend in the HMI;
+* improving disconnect and reconnect handling;
+* completing the WPF manual-test matrix;
+* verifying the LinuxCNC profile in its target environment;
+* adding alarm-history and recipe-management interfaces;
+* implementing the .NET-to-LinuxCNC adapter;
+* evaluating physical controller I/O after the software-only path is stable.
 
 See the [Development Plan](docs/DEVELOPMENT_PLAN.md) for the detailed roadmap.
 
 ---
 
-## Scope boundary
+## Scope and safety boundary
 
 This project validates software behavior, including:
 
-- equipment architecture;
-- machine-state transitions;
-- coordinated-motion commands;
-- controller adapter boundaries;
-- G-code command and status integration;
-- homing policy;
-- software limits;
-- simulated PLC handshakes;
-- recipes and inspection logic;
-- alarms and recovery;
-- persistence;
-- command concurrency;
-- cancellation;
-- deterministic failure scenarios.
+* equipment architecture;
+* machine-state transitions;
+* coordinated-motion commands;
+* controller-adapter boundaries;
+* G-code command and status integration;
+* homing policy;
+* software limits;
+* simulated PLC handshakes;
+* recipes and inspection logic;
+* alarms and recovery;
+* persistence;
+* command concurrency;
+* cancellation;
+* deterministic failure scenarios.
 
 It does **not** validate:
 
-- physical positioning accuracy or repeatability;
-- backlash, stiffness, vibration, or thermal behavior;
-- motor, drive, or power-supply sizing;
-- electrical-noise immunity;
-- real sensor performance;
-- physical collision dynamics;
-- emergency-stop hardware performance;
-- functional-safety integrity;
-- machinery-safety compliance.
+* physical positioning accuracy or repeatability;
+* backlash, stiffness, vibration, or thermal behavior;
+* motor, drive, or power-supply sizing;
+* electrical-noise immunity;
+* real sensor performance;
+* physical collision dynamics;
+* emergency-stop hardware performance;
+* functional-safety integrity;
+* machinery-safety compliance.
 
 > This is a simulation-only project. Physical performance and safety claims require separate hardware validation.
+
+---
+
+## Documentation
+
+| Topic                             | Document                                             |
+| --------------------------------- | ---------------------------------------------------- |
+| Install and run                   | [Getting Started](docs/GETTING_STARTED.md)           |
+| Understand the design             | [Architecture](docs/ARCHITECTURE.md)                 |
+| Follow the implementation         | [Implementation Guide](docs/IMPLEMENTATION_GUIDE.md) |
+| Review verification coverage      | [Test Strategy](docs/TEST_STRATEGY.md)               |
+| Follow planned work               | [Development Plan](docs/DEVELOPMENT_PLAN.md)         |
+| Prepare a portfolio demonstration | [Portfolio Review](docs/PORTFOLIO_REVIEW.md)         |
+| Prepare for technical discussion  | [Interview Preparation](docs/INTERVIEW_PREP.md)      |
+| Browse all documentation          | [Documentation Index](docs/README.md)                |
 
 ---
 
@@ -770,24 +711,9 @@ It does **not** validate:
 
 grblHAL and LinuxCNC are independent open-source projects.
 
-This repository does not redistribute the locally built grblHAL Simulator executable. Users build or obtain it separately and must follow the upstream project’s licensing terms.
+This repository does not redistribute the locally built grblHAL Simulator executable. Users must build or obtain it separately and comply with the upstream project’s licensing terms.
 
-The .NET application, adapters, tests, documentation, and simulation-specific integration code in this repository are released under this project’s license.
-
----
-
-## Continue exploring
-
-| Topic | Document |
-| --- | --- |
-| Install and run | [Getting Started](docs/GETTING_STARTED.md) |
-| Understand the design | [Architecture](docs/ARCHITECTURE.md) |
-| Follow the implementation | [Implementation Guide](docs/IMPLEMENTATION_GUIDE.md) |
-| Review verification coverage | [Test Strategy](docs/TEST_STRATEGY.md) |
-| Follow planned work | [Development Plan](docs/DEVELOPMENT_PLAN.md) |
-| Prepare a portfolio demonstration | [Portfolio Review](docs/PORTFOLIO_REVIEW.md) |
-| Prepare for technical discussion | [Interview Preparation](docs/INTERVIEW_PREP.md) |
-| Browse all documentation | [Documentation Index](docs/README.md) |
+The .NET application, adapters, tests, documentation, and simulation-specific integration code are released under this project’s license.
 
 ## License
 
