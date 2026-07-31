@@ -165,17 +165,21 @@ flowchart LR
     D[Preserve alarm<br/>Reset and rehome]
 
     A --> B --> C --> D
-<details> <summary><strong>View the complete fault sequence</strong></summary>
-Enable probe-timeout injection.
-Start the inspection.
-The simulated probe does not trigger.
-Active motion is cancelled.
-The machine enters Faulted.
-ProbeTimeout remains the primary alarm.
-Reset returns the machine to NotHomed.
-Rehoming is required before another automatic cycle.
-</details> ```
+```
 
+<details>
+<summary><strong>View the complete fault sequence</strong></summary>
+
+1. Enable probe-timeout injection.
+2. Start the inspection.
+3. The simulated probe does not trigger.
+4. Active motion is cancelled.
+5. The machine enters `Faulted`.
+6. `ProbeTimeout` remains the primary alarm.
+7. Reset returns the machine to `NotHomed`.
+8. Rehoming is required before another automatic cycle.
+
+</details>
 ---
 
 ## Test operator Stop
