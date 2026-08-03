@@ -424,6 +424,6 @@ Released under the [MIT License](LICENSE).
 
 <!-- DOC-FOOTER:START -->
 
-[Documentation index](docs/README.md) · [References](docs/REFERENCES.md) · [Back to top](#virtual-multi-axis-motion-control-platform)
+[Documentation index](docs/README.md)  · [Back to top](#virtual-multi-axis-motion-control-platform)
 
 <!-- DOC-FOOTER:END -->
