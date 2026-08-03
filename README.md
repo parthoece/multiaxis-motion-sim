@@ -20,7 +20,7 @@ A software-in-the-loop virtual commissioning platform for deterministic XYZ moti
 Built with **C#/.NET, WPF, SQLite, xUnit, and grblHAL Simulator**. Digital Twin and physical-controller integrations are planned adapter extensions.
 
 <p align="center">
-  <img src="docs/assets/hmi-demo.gif"
+  <img src="docs/diagrams/demo.gif"
        alt="WPF HMI initializing, homing, running a five-point inspection, injecting a probe timeout, and recovering"
        width="950">
 </p>
@@ -199,7 +199,7 @@ The objective is not merely to animate three axes. It is to verify that the comp
 ## System architecture
 
 <p align="center">
-  <img src="docs/assets/system-overview.svg"
+  <img src="docs/diagrams/system-overview.svg"
        alt="Architecture of the virtual motion-control platform showing operator interfaces, application workflows, replaceable motion backends, persistence, diagnostics, fault injection, and recovery"
        width="950">
 </p>
