@@ -5,9 +5,12 @@
 <!-- DOC-NAV:END -->
 
 
+
+> **Publication note:** Keep the root README concise. Detailed recovery tables, grblHAL build instructions, implementation phases, evidence requirements, and future-adapter work belong in this guide or their dedicated technical documents.
+
 This guide provides the recommended implementation order, the files to read, the code to change, the tests to add, and the evidence required at each stage.
 
-Do not attempt to implement the WPF interface, LinuxCNC adapter, and advanced machine profiles simultaneously. Complete each vertical workflow before adding another integration boundary.
+Do not attempt to implement the WPF interface, Digital Twin adapter, and advanced machine profiles simultaneously. Complete each vertical workflow before adding another integration boundary.
 
 ## Implementation workflow
 
@@ -51,11 +54,13 @@ Demonstration evidence
 | Primary-fault and secondary-warning isolation | Implemented |
 | Continuous machine-status streaming | Implemented |
 | Observable deterministic motion | Implemented |
-| WPF state-aware commands and measurement table | Implemented |
-| Expanded automated test source | Implemented; execution pending in .NET CI |
-| SQLite migrations and diagnostic export | Planned |
+| WPF state-aware commands and measurement table | Implemented baseline; additional screens and recorded verification remain |
+| grblHAL TCP motion backend | Implemented baseline; upstream simulator is built separately |
+| Expanded automated test source | Implemented; CI execution remains the authoritative verification |
+| SQLite runtime persistence | Implemented |
+| SQLite migrations, history queries, and diagnostic export | Planned |
 | Alarm-history and I/O-monitor HMI screens | Planned |
-| LinuxCNC adapter | Planned |
+| Digital Twin adapter | Planned |
 
 ## Phase 0 — Establish a verified baseline
 
@@ -223,7 +228,7 @@ Start command
 
 ### Remaining improvement
 
-Define adapter-specific stop-confirmation criteria for the future LinuxCNC implementation.
+Define adapter-specific stop-confirmation criteria for the future Digital Twin implementation.
 
 ## Phase 4 — Harden fault handling
 
@@ -257,6 +262,25 @@ Core isolation implemented.
 - failed alarm acknowledgement persistence
 - maximum warning retention and warning export
 
+### Recovery targets
+
+Reset never restarts motion automatically.
+
+| Fault condition | Recovery target |
+|---|---|
+| Missing part | `Ready` |
+| Air pressure unavailable | `Ready` |
+| Operator cancellation with the deterministic backend | `Ready` |
+| External-controller abort | `NotHomed` |
+| Probe timeout | `NotHomed` |
+| Homing failure | `NotHomed` |
+| Software-limit violation | `NotHomed` |
+| E-stop activation | `NotHomed` |
+| Motion controller unavailable | `Off` |
+| Unexpected startup failure | `Off` |
+
+A controller adapter may apply a stricter target when its reported position can no longer be trusted.
+
 ## Phase 5 — Complete the deterministic virtual plant
 
 ### Status
@@ -278,7 +302,7 @@ Core model implemented.
 
 - Separate surface geometry into its own component.
 - Add stale-input timestamps when a protocol adapter is introduced.
-- Add adapter contract tests shared by simulator and LinuxCNC.
+- Add adapter contract tests shared by simulator and Digital Twin.
 - Add configurable probe timing only when a requirement needs it.
 
 ### Constraint
@@ -354,16 +378,170 @@ HMI/
 - Record normal, stop, fault, and recovery demonstrations.
 - Verify accessibility, keyboard operation, and resizing.
 
-## Phase 8 — Verify LinuxCNC independently
+### Public proof capture
+
+Capture at least one screenshot and one short GIF:
+
+```text
+docs/assets/
+├── hmi-overview.png
+└── hmi-demo.gif
+```
+
+The GIF should show:
+
+1. initialization and Z-X-Y homing;
+2. a successful five-point inspection;
+3. measurement and cycle-result visibility;
+4. probe-timeout injection;
+5. cancellation and preserved primary alarm;
+6. reset, rehoming, and return to `Ready`.
+
+Do not publish a generated mockup as runtime evidence. Crop usernames, local paths, tokens, and unrelated desktop content from the capture.
+
+
+## Phase 8 — Validate the grblHAL software backend
+
+### Status
+
+Implemented baseline; repeatable transport and contract-test coverage remain.
 
 ### Goal
 
-Prove the LinuxCNC machine profile before connecting it to .NET.
+Validate the controller-protocol boundary without claiming physical-machine behavior.
+
+### Runtime path
+
+```text
+WPF HMI
+    ↓
+MachineCoordinator
+    ↓
+IMotionController
+    ↓
+GrblHalMotionController
+    ↓ TCP 127.0.0.1:23000
+grblHAL Simulator
+```
+
+### Genuine and modeled behavior
+
+| Behavior | Source |
+|---|---|
+| G-code parsing and planning | grblHAL Simulator |
+| XYZ movement execution | grblHAL Simulator |
+| Controller state and `MPos` reports | grblHAL Simulator |
+| Status query, feed hold, and soft reset | grblHAL real-time protocol |
+| Home-switch activation | Modeled by the .NET adapter |
+| Probe contact | Modeled by the .NET adapter |
+| Machine workflow and recovery | .NET application and domain rules |
+| Persistence and diagnostics | SQLite and JSON Lines |
+
+### Prepare the simulator
+
+The executable is not committed to the repository. Build the upstream grblHAL Simulator separately and place the Windows executable at:
+
+```text
+tools/grblhal-sim/bin/grblHAL_sim.exe
+```
+
+Example MSYS2 UCRT64 build:
+
+```bash
+pacman -S --needed \
+    git \
+    mingw-w64-ucrt-x86_64-gcc \
+    mingw-w64-ucrt-x86_64-cmake \
+    mingw-w64-ucrt-x86_64-ninja
+
+mkdir -p /c/src
+cd /c/src
+
+git clone --recurse-submodules \
+    https://github.com/grblHAL/Simulator.git \
+    grblhal-simulator
+
+cd grblhal-simulator
+git submodule update --init --recursive
+
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+```
+
+Copy the executable:
+
+```powershell
+New-Item -ItemType Directory -Force `
+    ".\tools\grblhal-sim\bin"
+
+Copy-Item `
+    "C:\src\grblhal-simulator\build\grblHAL_sim.exe" `
+    ".\tools\grblhal-sim\bin\grblHAL_sim.exe" `
+    -Force
+```
+
+Pin a tested upstream tag or commit in the release evidence. The executable and `EEPROM.DAT` must remain ignored by Git.
+
+### Smoke test
+
+Start the simulator:
+
+```powershell
+.\tools\grblhal-sim\bin\grblHAL_sim.exe -p 23000
+```
+
+Run the protocol check in another terminal:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass `
+    -File scripts/Test-GrblHalSimulator.ps1
+```
+
+The check should verify TCP connectivity, startup identification, `$I`, real-time `?` status, an `Idle` report, and XYZ `MPos`.
+
+### Run the HMI with grblHAL
+
+```powershell
+$env:MOTION_BACKEND = "grblhal"
+$env:GRBLHAL_HOST = "127.0.0.1"
+$env:GRBLHAL_PORT = "23000"
+
+dotnet run --project src/MotionControl.Hmi.Wpf
+```
+
+### Validation boundary
+
+This phase validates:
+
+- TCP communication with the controller core;
+- G-code command formatting and acknowledgement;
+- controller-state and `MPos` parsing;
+- motion-completion monitoring;
+- feed-hold and reset behavior;
+- backend selection;
+- integration with machine states, persistence, diagnostics, and the WPF HMI.
+
+It does not validate electrical switches or probes, microcontroller step timing, motors, drives, encoders, mechanics, collision behavior, positioning accuracy, functional safety, or machinery compliance.
+
+### Remaining verification
+
+- Pin and record the tested upstream simulator revision.
+- Add fake-transport tests for partial, delayed, malformed, and disconnected responses.
+- Add shared `IMotionController` contract tests.
+- Define reconnect and position-trust behavior.
+- Record a grblHAL-backed HMI demonstration.
+
+
+## Phase 9 — Verify Digital Twin independently
+
+### Goal
+
+Prove the Digital Twin machine profile before connecting it to .NET.
 
 ### Required evidence
 
 - Linux distribution and version;
-- LinuxCNC version;
+- Digital Twin version;
 - profile commit;
 - successful launch;
 - homing order;
@@ -373,15 +551,15 @@ Prove the LinuxCNC machine profile before connecting it to .NET.
 - E-stop behavior;
 - probe-input limitation.
 
-Use [`../tests/manual/LINUXCNC_TEST_MATRIX.md`](../tests/manual/LINUXCNC_TEST_MATRIX.md).
+Use [`../tests/manual/DIGITAL_TWIN_TEST_MATRIX.md`](../tests/manual/DIGITAL_TWIN_TEST_MATRIX.md).
 
 ### Definition of done
 
-- All claimed LinuxCNC features have recorded evidence.
+- All claimed Digital Twin features have recorded evidence.
 - Version-specific changes are documented.
 - Unimplemented probing is clearly labeled.
 
-## Phase 9 — Implement the LinuxCNC adapter
+## Phase 10 — Implement the Digital Twin adapter
 
 ### Goal
 
@@ -402,32 +580,35 @@ Replace the in-process motion simulator without changing Domain or use-case rule
 
 ### Integration tests
 
-Use a LinuxCNC simulation environment to verify:
+Use a Digital Twin simulation environment to verify:
 
 - adapter startup;
 - command/status agreement;
 - stop response;
 - lost connection;
-- LinuxCNC alarm mapping;
+- Digital Twin alarm mapping;
 - normal inspection path.
 
 ### Definition of done
 
 - Domain and Application projects remain unchanged.
 - Adapter failure maps to known fault codes.
-- Both simulator and LinuxCNC satisfy the same contract tests.
+- Both simulator and Digital Twin satisfy the same contract tests.
 
-## Phase 10 — Produce portfolio evidence
+## Phase 11 — Produce portfolio evidence
 
 ### Required evidence set
 
 ```text
 portfolio/
 ├── architecture-diagram.svg
+├── hmi-demo.gif
+├── hmi-overview.png
 ├── normal-cycle-demo.mp4
 ├── probe-timeout-demo.mp4
+├── grblhal-smoke-test.txt
 ├── test-results.txt
-├── linuxcnc-evidence/
+├── digital-twin-evidence/
 ├── screenshots/
 └── release-notes.md
 ```
@@ -442,11 +623,23 @@ portfolio/
 6. Inject a probe timeout.
 7. Show fault entry and diagnostics.
 8. Recover deliberately.
-9. Explain LinuxCNC migration.
+9. Explain Digital Twin migration.
+
+### README publication gate
+
+Before replacing the illustrative README overview with runtime media:
+
+- commit `docs/assets/hmi-demo.gif` or `docs/assets/hmi-overview.png`;
+- confirm the media was captured from the current release commit;
+- record the operating system, .NET SDK, selected backend, simulator revision, and commit hash;
+- verify that the README status table matches this guide;
+- run documentation and architecture checks;
+- confirm every badge and relative link resolves;
+- confirm no generated database, simulator executable, `EEPROM.DAT`, credentials, usernames, or local paths are committed.
 
 ### Definition of done
 
-A reviewer can understand the problem, architecture, executable behavior, failure handling, and limitations in less than ten minutes.
+A reviewer can understand the problem, architecture, executable behavior, failure handling, evidence, and limitations in less than ten minutes.
 
 ---
 

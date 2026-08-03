@@ -19,7 +19,7 @@ The score measures demonstrated evidence in the repository, not the candidate's 
 | Equipment workflow and recovery | 15 | 13 | Stop, recovery targets, command exclusion, and primary-fault preservation implemented |
 | HMI and operator experience | 10 | 7 | Live status, state-aware commands, safety display, warnings, and measurements; more screens pending |
 | Testing and traceability | 10 | 8 | Broad reliability test source and traceability; CI execution still pending |
-| Motion and LinuxCNC evidence | 10 | 5 | Simulator improved; LinuxCNC adapter and manual evidence remain incomplete |
+| Motion and Digital Twin evidence | 10 | 5 | Simulator improved; Digital Twin adapter and manual evidence remain incomplete |
 | Diagnostics and persistence | 5 | 4 | Transactional SQLite, JSONL, and warning isolation; export and migrations pending |
 | Documentation and open source | 5 | 5 | Comprehensive navigation, guides, ADRs, and policies |
 | Demonstration and release evidence | 5 | 1 | Public CI, videos, screenshots, and tagged release are still needed |
@@ -83,12 +83,12 @@ Expected score gain: **7–10 points**.
 
 Expected score gain: **3–5 points**.
 
-### Priority 3 — Verify and integrate LinuxCNC
+### Priority 3 — Verify and integrate Digital Twin
 
-- Complete the LinuxCNC manual matrix.
-- Implement `LinuxCncMotionController`.
+- Complete the Digital Twin manual matrix.
+- Implement `DigitalTwinMotionController`.
 - Add shared adapter contract tests.
-- Demonstrate normal and failure workflows using LinuxCNC simulation.
+- Demonstrate normal and failure workflows using Digital Twin simulation.
 
 Expected score gain: **7–10 points**.
 
@@ -111,10 +111,10 @@ A stronger broad-application target is **85/100 or higher**:
 - normal and fault demonstrations exist;
 - Windows HMI is shown running;
 - manual WPF evidence is recorded;
-- LinuxCNC profile is verified;
+- Digital Twin profile is verified;
 - known limitations remain explicit.
 
-The LinuxCNC adapter can raise the project further, but public executable evidence should come first.
+The Digital Twin adapter can raise the project further, but public executable evidence should come first.
 
 ---
 

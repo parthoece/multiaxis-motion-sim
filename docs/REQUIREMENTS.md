@@ -27,7 +27,7 @@
 | FR-016 | The system shall support cancellation of an active cycle. |
 | FR-017 | The system shall expose a cross-platform console demo. |
 | FR-018 | The system shall expose a Windows operator HMI. |
-| FR-019 | The repository shall include an independent LinuxCNC XYZ simulation profile. |
+| FR-019 | The repository shall include an independent Digital Twin XYZ simulation profile. |
 | FR-020 | New machine profiles shall not require changes to equipment-domain rules. |
 | FR-021 | The system shall stream machine status without blocking the operator interface. |
 | FR-022 | Operator stop shall cancel the active workflow and wait for completion confirmation. |
@@ -38,7 +38,7 @@
 
 | ID | Requirement |
 |---|---|
-| QR-001 | Domain code shall not depend on GUI, persistence, LinuxCNC, or simulation implementations. |
+| QR-001 | Domain code shall not depend on GUI, persistence, Digital Twin, or simulation implementations. |
 | QR-002 | Simulation results shall be reproducible with the same scenario and seed. |
 | QR-003 | Every fault scenario shall define trigger, detection, response, and recovery. |
 | QR-004 | Core state transitions and recipes shall have automated tests. |

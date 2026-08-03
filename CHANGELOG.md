@@ -18,7 +18,7 @@ All notable changes are documented here.
 - Inspection recipes, probing, measurements, alarms, and recovery.
 - SQLite operational history and JSON Lines diagnostic events.
 - Unit and integration tests.
-- LinuxCNC XYZ simulation profile and G-code examples.
+- Digital Twin XYZ simulation profile and G-code examples.
 - Engineering requirements, architecture, traceability, and acceptance documentation.
 - Open-source governance, support, security, citation, ownership, and CI files.
 

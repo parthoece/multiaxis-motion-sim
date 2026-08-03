@@ -1,11 +1,11 @@
-# LinuxCNC Manual Test Matrix
+# Digital Twin Manual Test Matrix
 
 <!-- DOC-NAV:START -->
 [Home](../../README.md) · [Docs](../../docs/README.md) · [Start](../../docs/GETTING_STARTED.md) · [Implement](../../docs/IMPLEMENTATION_GUIDE.md) · [Architecture](../../docs/ARCHITECTURE.md) · [Test](../../docs/TEST_STRATEGY.md) · [Interview](../../docs/INTERVIEW_PREP.md)
 <!-- DOC-NAV:END -->
 
 
-Record operating system, LinuxCNC version, profile commit, date, and evidence.
+Record operating system, Digital Twin version, profile commit, date, and evidence.
 
 | ID | Test | Expected result | Status |
 |---|---|---|---|
@@ -23,5 +23,5 @@ Record operating system, LinuxCNC version, profile commit, date, and evidence.
 ---
 
 <!-- DOC-FOOTER:START -->
-[Documentation index](../../docs/README.md) · [Back to top](#linuxcnc-manual-test-matrix)
+[Documentation index](../../docs/README.md) · [Back to top](#digital-twin-manual-test-matrix)
 <!-- DOC-FOOTER:END -->

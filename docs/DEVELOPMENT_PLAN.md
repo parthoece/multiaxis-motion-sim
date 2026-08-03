@@ -87,40 +87,45 @@ Implement:
 
 Evidence: migration tests and recovery instructions.
 
-## Milestone 3 — Verify LinuxCNC independently
+## Milestone 3 — Validate grblHAL integration evidence
 
-1. Install LinuxCNC.
-2. Launch the XYZ profile.
-3. Home and jog.
-4. Run rectangle G-code.
-5. verify software limits;
-6. test E-stop;
-7. record the inactive-probe limitation;
-8. complete the manual matrix.
+1. Launch the grblHAL simulator.
+2. Execute normal, operator-stop, and probe-timeout scenarios.
+3. Confirm expected state transitions and fault mapping.
+4. Record logs, screenshots, and short demonstration videos.
+5. Complete the WPF manual matrix.
+6. Publish known limitations and recovery behavior.
 
-Evidence: environment versions, logs, screenshots, and video.
+Evidence: simulator version, command transcripts, matrix results, screenshots, and video.
 
-## Milestone 4 — Implement the LinuxCNC adapter
+## Milestone 4 — Harden adapter contracts and diagnostics
 
-Define a supported communication boundary and implement:
+Implement and verify:
 
-- connection lifecycle;
-- status stream;
-- initialize;
-- home;
-- absolute move;
-- stop;
-- probe result;
-- timeout and communication-loss mapping.
+- shared contract tests for deterministic simulator and grblHAL adapters;
+- alarm-history query and operator-facing diagnostics;
+- diagnostic export package;
+- Windows-only view-model tests;
+- retention and recovery documentation.
 
 Acceptance:
 
 - no Domain changes;
 - no equipment-rule changes in Application;
-- shared adapter contract tests;
-- normal and fault demonstrations.
+- adapter contract tests pass for both supported backends;
+- normal and fault demonstrations are published.
 
-## Milestone 5 — Add one advanced profile
+## Milestone 5 — Optional Digital Twin and hardware extension
+
+Only execute after the HAL-first portfolio release is complete.
+
+1. Define Digital Twin communication and state mapping boundaries.
+2. Implement `DigitalTwinMotionController`.
+3. Add shared contract tests for grblHAL and Digital Twin.
+4. Define a physical-controller adapter plan using the same interface seam.
+5. Publish extension limitations and verification evidence.
+
+## Milestone 6 — Add one advanced profile
 
 Choose one business-relevant extension:
 
@@ -128,9 +133,9 @@ Choose one business-relevant extension:
 - duplicated-joint gantry;
 - XYZAC system with non-trivial kinematics.
 
-Add only after the XYZ workflow and LinuxCNC adapter are verified.
+Add only after the XYZ workflow and selected motion backends are verified.
 
-## Milestone 6 — Produce the hiring portfolio release
+## Milestone 7 — Produce the hiring portfolio release
 
 - Replace `parthoece`.
 - Pass public CI, Windows build, and CodeQL.

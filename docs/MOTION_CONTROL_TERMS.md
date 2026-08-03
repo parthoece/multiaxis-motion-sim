@@ -76,11 +76,11 @@
 | Latency | Delay between an event and response |
 | Jitter | Variation in periodic timing |
 
-## LinuxCNC and HAL
+## Digital Twin and HAL
 
 | Term | Software meaning |
 |---|---|
-| HAL | Hardware Abstraction Layer connecting LinuxCNC components |
+| HAL | Hardware Abstraction Layer connecting Digital Twin components |
 | Component | HAL module exposing pins, parameters, and functions |
 | Pin | Typed input or output connection |
 | Signal | Named value connecting compatible pins |

@@ -41,7 +41,7 @@ flowchart TB
         PLC[Virtual PLC]
         SQLITE[SQLite Store]
         JSONL[JSONL Event Log]
-        LCNC[Future LinuxCNC Adapter]
+        LCNC[Future Digital Twin Adapter]
     end
 
     WPF --> FACADE
@@ -78,7 +78,7 @@ flowchart TB
 - `MotionControl.Application` depends on Domain.
 - Simulation and Persistence depend on Application interfaces and Domain types.
 - Console and WPF compose concrete adapters.
-- LinuxCNC-specific code remains outside Domain and Application rules.
+- Digital Twin-specific code remains outside Domain and Application rules.
 
 ## Application responsibilities
 

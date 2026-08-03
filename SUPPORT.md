@@ -7,13 +7,13 @@
 
 ## Questions
 
-Use GitHub Discussions after it is enabled for setup, architecture, LinuxCNC, motion-control, and development questions.
+Use GitHub Discussions after it is enabled for setup, architecture, Digital Twin, motion-control, and development questions.
 
 Include:
 
 - operating system;
 - .NET SDK version;
-- LinuxCNC version when relevant;
+- Digital Twin version when relevant;
 - machine profile;
 - command used;
 - relevant logs.

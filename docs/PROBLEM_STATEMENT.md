@@ -47,7 +47,7 @@ Developers can execute the same workflow repeatedly under normal and abnormal co
 - cancellation and concurrency;
 - persistent operational records;
 - deterministic fault injection;
-- independent LinuxCNC simulation profile.
+- independent Digital Twin simulation profile.
 
 ## Out of scope
 

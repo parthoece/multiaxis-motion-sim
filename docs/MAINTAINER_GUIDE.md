@@ -47,7 +47,7 @@ Follow [Release Process](RELEASE_PROCESS.md). A release must include:
 - changelog;
 - test results;
 - known limitations;
-- LinuxCNC manual evidence when the profile is claimed;
+- Digital Twin manual evidence when the profile is claimed;
 - migration notes;
 - corrected citation version;
 - no unresolved critical security findings.

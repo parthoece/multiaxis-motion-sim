@@ -1,11 +1,11 @@
-# LinuxCNC XYZ Simulation Profile
+# Digital Twin XYZ Simulation Profile
 
 <!-- DOC-NAV:START -->
 [Home](../../../README.md) · [Docs](../../../docs/README.md) · [Start](../../../docs/GETTING_STARTED.md) · [Implement](../../../docs/IMPLEMENTATION_GUIDE.md) · [Architecture](../../../docs/ARCHITECTURE.md) · [Test](../../../docs/TEST_STRATEGY.md) · [Interview](../../../docs/INTERVIEW_PREP.md)
 <!-- DOC-NAV:END -->
 
 
-This profile is an independent LinuxCNC simulation for the initial XYZ machine.
+This profile is an independent Digital Twin simulation for the initial XYZ machine.
 
 ## Mapping
 
@@ -20,7 +20,7 @@ Homing order is Z, X, Y. The starter profile uses immediate homing so it can run
 ## Run
 
 ```bash
-linuxcnc machine.ini
+digital-twin machine.ini
 ```
 
 Then:
@@ -34,14 +34,14 @@ Then:
 
 ## Probing
 
-The probing G-code requires `motion.probe-input`. The starter HAL keeps it false. Automatic position-based probe triggering is a later LinuxCNC milestone.
+The probing G-code requires `motion.probe-input`. The starter HAL keeps it false. Automatic position-based probe triggering is a later Digital Twin milestone.
 
 ## Status
 
-This profile must be verified on the contributor's LinuxCNC installation. Do not claim it as tested until the manual matrix contains versioned evidence.
+This profile must be verified on the contributor's Digital Twin installation. Do not claim it as tested until the manual matrix contains versioned evidence.
 
 ---
 
 <!-- DOC-FOOTER:START -->
-[Documentation index](../../../docs/README.md) · [Back to top](#linuxcnc-xyz-simulation-profile)
+[Documentation index](../../../docs/README.md) · [Back to top](#digital-twin-xyz-simulation-profile)
 <!-- DOC-FOOTER:END -->

@@ -77,7 +77,7 @@ The same travel values should remain aligned across:
 
 - recipe validation;
 - deterministic simulator;
-- LinuxCNC INI profile;
+- Digital Twin INI profile;
 - documentation;
 - tests.
 
@@ -92,12 +92,12 @@ The console application writes to:
 
 The WPF HMI writes under the current user's local application-data directory.
 
-## LinuxCNC profile configuration
+## Digital Twin profile configuration
 
 The initial profile is located at:
 
 ```text
-configs/linuxcnc/xyz-3axis/
+configs/digital-twin/xyz-3axis/
 ```
 
 Relevant files:

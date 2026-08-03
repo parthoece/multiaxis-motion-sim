@@ -13,7 +13,7 @@ Use semantic versioning. Before 1.0, document every breaking change.
 
 1. CI and CodeQL pass.
 2. Windows HMI builds.
-3. Relevant manual LinuxCNC tests are complete.
+3. Relevant manual Digital Twin tests are complete.
 4. Traceability and acceptance criteria are updated.
 5. Changelog is updated.
 6. `CITATION.cff` and project version are updated.

@@ -74,19 +74,19 @@ tests/manual/WPF_HMI_TEST_MATRIX.md
 
 A future Windows-only test project should cover command availability, status updates, measurement presentation, and shutdown cancellation.
 
-## LinuxCNC manual verification
+## Digital Twin manual verification
 
-The LinuxCNC profile is tracked separately because the current generation environment cannot execute LinuxCNC:
+The Digital Twin profile is tracked separately because the current generation environment cannot execute Digital Twin:
 
 ```text
-tests/manual/LINUXCNC_TEST_MATRIX.md
+tests/manual/DIGITAL_TWIN_TEST_MATRIX.md
 ```
 
 ## Evidence labels
 
 - **Implemented test source:** test code exists.
 - **Automated verification pending:** must pass the .NET GitHub Actions workflow.
-- **Manual simulation evidence:** executed in WPF or LinuxCNC and recorded.
+- **Manual simulation evidence:** executed in WPF or Digital Twin and recorded.
 - **Physical validation required:** cannot be proven here.
 
 ## Release requirement

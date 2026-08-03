@@ -26,18 +26,18 @@
 - Microsoft.Data.Sqlite package:  
   https://www.nuget.org/packages/Microsoft.Data.Sqlite/
 
-## LinuxCNC
+## Digital Twin
 
-- LinuxCNC INI configuration:  
-  https://linuxcnc.org/docs/html/config/ini-config.html
-- LinuxCNC homing configuration:  
-  https://linuxcnc.org/docs/stable/html/config/ini-homing.html
-- LinuxCNC G38 probing:  
-  https://linuxcnc.org/docs/stable/html/gcode/g-code.html
-- LinuxCNC motion component:  
-  https://linuxcnc.org/docs/html/man/man9/motion.9.html
-- LinuxCNC kinematics concepts:  
-  https://linuxcnc.org/docs/stable/html/motion/5-axis-kinematics.html
+- Digital Twin INI configuration:  
+  https://digital-twin.org/docs/html/config/ini-config.html
+- Digital Twin homing configuration:  
+  https://digital-twin.org/docs/stable/html/config/ini-homing.html
+- Digital Twin G38 probing:  
+  https://digital-twin.org/docs/stable/html/gcode/g-code.html
+- Digital Twin motion component:  
+  https://digital-twin.org/docs/html/man/man9/motion.9.html
+- Digital Twin kinematics concepts:  
+  https://digital-twin.org/docs/stable/html/motion/5-axis-kinematics.html
 
 ## Open-source maintenance
 

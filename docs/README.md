@@ -57,7 +57,7 @@
 | [Operator Guide](OPERATOR_GUIDE.md) | Normal operation, faults, stop, and recovery |
 | [Developer Guide](DEVELOPER_GUIDE.md) | Architecture rules and contribution workflow |
 | [Implementation Guide](IMPLEMENTATION_GUIDE.md) | File-by-file implementation order and definitions of done |
-| [Configuration Reference](CONFIGURATION_REFERENCE.md) | SDK, packages, travel, runtime, and LinuxCNC settings |
+| [Configuration Reference](CONFIGURATION_REFERENCE.md) | SDK, packages, travel, runtime, and Digital Twin settings |
 | [Persistence and Logging](PERSISTENCE_AND_LOGGING.md) | SQLite schema and structured events |
 | [Troubleshooting](TROUBLESHOOTING.md) | Common setup and runtime problems |
 | [Problem Statement](PROBLEM_STATEMENT.md) | Industry problem, project objective, scope, and non-goals |
@@ -72,10 +72,10 @@
 | [Traceability Matrix](TRACEABILITY_MATRIX.md) | Requirements mapped to code and evidence |
 | [Acceptance Criteria](ACCEPTANCE_CRITERIA.md) | Definition of a complete release |
 | [Development Plan](DEVELOPMENT_PLAN.md) | Completed work and ordered remaining milestones |
-| [LinuxCNC Integration](LINUXCNC_INTEGRATION.md) | Separate LinuxCNC profile and adapter roadmap |
+| [Digital Twin Extension](DIGITAL_TWIN_EXTENSION.md) | Digital Twin and hardware adapter roadmap |
 | [Technology Rationale](TECHNOLOGY_RATIONALE.md) | Why technologies are included or excluded |
 | [Motion-Control Terms](MOTION_CONTROL_TERMS.md) | Common software and controls vocabulary |
-| [References](REFERENCES.md) | Industry, runtime, LinuxCNC, and open-source sources |
+| [References](REFERENCES.md) | Industry, runtime, Digital Twin, and open-source sources |
 | [Portfolio Review](PORTFOLIO_REVIEW.md) | Mid-level job-portfolio scorecard and improvement priorities |
 | [Interview Preparation](INTERVIEW_PREP.md) | Project pitch, technical questions, trade-offs, and demo checklist |
 

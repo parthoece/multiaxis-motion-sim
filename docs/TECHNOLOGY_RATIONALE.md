@@ -12,7 +12,7 @@
 | .NET 10 and C# | Equipment workflow, concurrency, adapters, tests | software exception, cancellation, invalid command |
 | WPF | Windows equipment operator interface | command failure and operator recovery |
 | In-process deterministic simulator | Hardware-independent virtual commissioning | motion, probe, permissive, and communication faults |
-| LinuxCNC, HAL, G-code | Independent industrial motion simulation | homing, limit, and probe behavior |
+| Digital Twin, HAL, G-code | Independent industrial motion simulation | homing, limit, and probe behavior |
 | SQLite | Local history for one machine | transaction or storage failure |
 | JSON Lines | Portable diagnostic events | malformed or missing diagnostic context |
 | xUnit | Regression protection | failed invariant or workflow |

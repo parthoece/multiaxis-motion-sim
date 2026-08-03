@@ -27,7 +27,7 @@ Only describe features that you have implemented and verified. Use the status la
 >
 > Fault handling preserves the primary equipment fault before attempting diagnostic logging or PLC fault outputs. Secondary failures become warnings instead of replacing the original alarm. The HMI receives continuous status, enables commands according to machine state, and displays safety inputs, motion, alarms, warnings, and measurements.
 >
-> I intentionally excluded microservices, Docker, MQTT, and other distributed infrastructure because the current business problem involves one local machine. The remaining major milestones are public CI evidence, operator diagnostic screens, LinuxCNC verification, and a LinuxCNC motion adapter.
+> I intentionally excluded microservices, Docker, MQTT, and other distributed infrastructure because the current business problem involves one local machine. The remaining major milestones are public CI evidence, operator diagnostic screens, Digital Twin verification, and a Digital Twin motion adapter.
 
 ## Five-minute technical walkthrough
 
@@ -53,7 +53,7 @@ Adapters     → Application → Domain
 
 Key point:
 
-> The equipment workflow depends on interfaces, so the deterministic simulator can later be replaced by LinuxCNC without rewriting state rules or recipes.
+> The equipment workflow depends on interfaces, so the deterministic simulator can later be replaced by Digital Twin without rewriting state rules or recipes.
 
 ### 3. State machine
 
@@ -116,15 +116,15 @@ State honestly:
 - authoritative .NET compilation and test execution still need to pass in public CI;
 - WPF behavior has not yet been recorded through the complete manual matrix;
 - alarm history, recipe selection, I/O monitor, and diagnostic export are not complete;
-- LinuxCNC profile requires environment verification;
-- .NET and LinuxCNC integration is not complete;
+- Digital Twin profile requires environment verification;
+- .NET and Digital Twin integration is not complete;
 - physical accuracy, hardware safety, and machinery compliance remain out of scope.
 
 ## Architecture questions and answers
 
 ### Why use ports and adapters?
 
-It protects business rules from device-specific APIs. The application can use an in-process simulator during automated tests and a LinuxCNC adapter later while preserving the same workflow and state rules.
+It protects business rules from device-specific APIs. The application can use an in-process simulator during automated tests and a Digital Twin adapter later while preserving the same workflow and state rules.
 
 ### Why not use microservices?
 
@@ -138,9 +138,9 @@ The current product boundary is one local simulated machine. SQLite supports tra
 
 A fault must be repeatable to become a regression test. Deterministic seeds and explicit scenarios make measurements and failures reproducible.
 
-### Why keep LinuxCNC separate initially?
+### Why keep Digital Twin separate initially?
 
-It allows the equipment-domain and workflow software to be developed and tested on any .NET machine. LinuxCNC can then be integrated through a dedicated adapter after its profile is independently verified.
+It allows the equipment-domain and workflow software to be developed and tested on any .NET machine. Digital Twin can then be integrated through a dedicated adapter after its profile is independently verified.
 
 ### Why WPF?
 
@@ -166,11 +166,11 @@ Faults are explicit simulation scenarios, not unpredictable random events. Tests
 
 ### How do you avoid coupling UI to hardware?
 
-The WPF view model uses application workflows. It does not call LinuxCNC, SQLite, or HAL directly. Adapter implementations are composed at startup.
+The WPF view model uses application workflows. It does not call Digital Twin, SQLite, or HAL directly. Adapter implementations are composed at startup.
 
 ### What would you refactor first?
 
-The coordinator has already been reduced to a thin facade with lifecycle, inspection, stop, and status services. The next refinements would be explicit SQLite migrations, a diagnostic-export service, Windows-only HMI view-model tests, and shared motion-adapter contract tests before implementing LinuxCNC integration.
+The coordinator has already been reduced to a thin facade with lifecycle, inspection, stop, and status services. The next refinements would be explicit SQLite migrations, a diagnostic-export service, Windows-only HMI view-model tests, and shared motion-adapter contract tests before implementing Digital Twin integration.
 
 ## Motion-control questions and answers
 
@@ -206,9 +206,9 @@ Use deterministic fault injection:
 
 ### Tell me about an incomplete design
 
-Use the LinuxCNC boundary honestly:
+Use the Digital Twin boundary honestly:
 
-> The deterministic simulator and equipment application are implemented, but the LinuxCNC profile is still independent and the adapter is not complete. I intentionally separated those milestones so the domain and workflow software could be verified first. Before claiming LinuxCNC integration, I will complete the versioned manual profile tests and then make both motion implementations pass the same contract tests.
+> The deterministic simulator and equipment application are implemented, but the Digital Twin profile is still independent and the adapter is not complete. I intentionally separated those milestones so the domain and workflow software could be verified first. Before claiming Digital Twin integration, I will complete the versioned manual profile tests and then make both motion implementations pass the same contract tests.
 
 ### Tell me about cross-functional communication
 
@@ -221,7 +221,7 @@ Use only after the related features are verified.
 - Designed a C#/.NET software-in-the-loop virtual commissioning platform for an XYZ automated inspection machine, separating domain workflows from motion, PLC, persistence, and HMI adapters.
 - Implemented deterministic homing, coordinated movement, five-point probing, recipe validation, alarms, fault injection, and transactional SQLite inspection history.
 - Built unit and integration tests for equipment state transitions, permissives, abnormal probe behavior, tolerance evaluation, and persistence.
-- Developed a WPF operator-interface starter and LinuxCNC simulation profile with documented homing, travel limits, G-code, and manual verification plans.
+- Developed a WPF operator-interface starter and Digital Twin simulation profile with documented homing, travel limits, G-code, and manual verification plans.
 - Established CI, CodeQL, dependency updates, requirements traceability, architecture decisions, and open-source maintenance policies.
 
 ## Statements to avoid
@@ -231,7 +231,7 @@ Do not say:
 - “This is a production-ready machine controller.”
 - “The project validates machinery safety.”
 - “I implemented EtherCAT, OPC UA, or Modbus” unless those adapters exist.
-- “LinuxCNC is fully integrated with .NET” before the adapter is complete.
+- “Digital Twin is fully integrated with .NET” before the adapter is complete.
 - “The simulator proves physical accuracy.”
 - “All code is verified” before CI and manual matrices pass.
 
@@ -256,7 +256,7 @@ Before an interview:
 - Record a probe-timeout and recovery demonstration.
 - Include one architecture diagram.
 - Include test results.
-- Complete the LinuxCNC and WPF manual matrices for any claimed behavior.
+- Complete the Digital Twin and WPF manual matrices for any claimed behavior.
 - Prepare one design trade-off and one known limitation.
 - Practice the 30-second and two-minute explanations.
 

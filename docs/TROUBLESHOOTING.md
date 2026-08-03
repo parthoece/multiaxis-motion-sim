@@ -92,12 +92,12 @@ python scripts/check_docs.py
 
 The output identifies a missing navigation marker or broken local link.
 
-## LinuxCNC profile fails to launch
+## Digital Twin profile fails to launch
 
 Record:
 
 - operating system;
-- LinuxCNC version;
+- Digital Twin version;
 - terminal error;
 - changed INI or HAL files.
 
@@ -105,7 +105,7 @@ Common causes include version-specific pin names, missing AXIS GUI packages, and
 
 ## Probe template never completes
 
-The LinuxCNC probing template requires `motion.probe-input` to become true. The starter HAL intentionally keeps it false until a virtual surface component is implemented.
+The Digital Twin probing template requires `motion.probe-input` to become true. The starter HAL intentionally keeps it false until a virtual surface component is implemented.
 
 ## Reporting a defect
 

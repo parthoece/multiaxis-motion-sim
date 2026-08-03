@@ -37,7 +37,7 @@ The Domain project must never reference:
 
 - WPF;
 - SQLite;
-- LinuxCNC;
+- Digital Twin;
 - simulation implementations;
 - file-system or network libraries.
 
@@ -79,7 +79,7 @@ Examples:
 - deterministic motion simulator;
 - virtual PLC;
 - SQLite operations store;
-- LinuxCNC motion adapter.
+- Digital Twin motion adapter.
 
 An adapter must document:
 
@@ -95,7 +95,7 @@ An adapter must document:
 Create a new isolated directory:
 
 ```text
-configs/linuxcnc/<profile-name>/
+configs/digital-twin/<profile-name>/
 ```
 
 Each profile requires:

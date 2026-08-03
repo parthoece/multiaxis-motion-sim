@@ -56,7 +56,7 @@ Operator Stop called the motion adapter but did not own the cancellation token u
 
 Revisit when:
 
-- LinuxCNC adapter semantics require a different stop-confirmation model;
+- Digital Twin adapter semantics require a different stop-confirmation model;
 - a real controller cannot guarantee cancellation using the current contract;
 - multiple concurrent non-motion operations become necessary;
 - warning retention requires persistent storage.

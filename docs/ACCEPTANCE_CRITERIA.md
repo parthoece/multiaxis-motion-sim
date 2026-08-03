@@ -43,13 +43,20 @@
 - WPF manual matrix is complete.
 - Normal, stop, fault, and recovery videos are published.
 
-## `v0.3.0` — LinuxCNC adapter
+## `v0.3.0` — HAL-first integration evidence
 
-- LinuxCNC profile launches on a documented version.
-- Manual LinuxCNC matrix is complete.
-- A .NET LinuxCNC adapter implements the motion contract.
-- Simulator and LinuxCNC pass shared adapter contract tests.
-- Normal and probe-fault workflows run through LinuxCNC simulation.
+- grblHAL simulator launch and connection workflow is documented.
+- Normal, operator-stop, and probe-fault workflows execute with published evidence.
+- WPF manual matrix is complete and attached to the release.
+- Shared adapter contract tests pass for deterministic simulator and grblHAL.
+- Domain and application rules remain unchanged.
+
+## `v0.4.0` — Optional Digital Twin and hardware extension
+
+- A .NET `DigitalTwinMotionController` implements the motion contract.
+- Shared adapter contract tests pass for deterministic simulator, grblHAL, and Digital Twin.
+- Digital Twin behavior mapping and known limitations are documented.
+- Physical-controller adapter plan is documented with verification strategy.
 - Domain and application rules remain unchanged.
 
 ---

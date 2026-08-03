@@ -9,8 +9,8 @@
 |---|---|---|---|
 | FR-001 | `MachineLifecycleService.InitializeAsync` | SQLite integration test and normal scenario | Automated execution pending |
 | FR-002 | State guards and motion adapter | State-machine and application tests | Automated execution pending |
-| FR-003 | `DeterministicMotionController.HomeAllAsync` | Application flow and LinuxCNC manual matrix | Automated source + manual pending |
-| FR-004 | Simulator target validation and LinuxCNC limits | Limit scenarios and manual matrix | Partial |
+| FR-003 | `DeterministicMotionController.HomeAllAsync` | Application flow and Digital Twin manual matrix | Automated source + manual pending |
+| FR-004 | Simulator target validation and Digital Twin limits | Limit scenarios and manual matrix | Partial |
 | FR-005 | `InspectionRecipe` and `RecipeValidator` | Recipe tests and normal cycle | Automated execution pending |
 | FR-006 | `SafetyInputs` and `VirtualPlcGateway` | Missing-part application test | Automated execution pending |
 | FR-007 | `ProbeZAsync` | Normal-cycle application test | Automated execution pending |
@@ -25,7 +25,7 @@
 | FR-016 | `ActiveOperationController` and `MachineStopService` | Operator-stop test | Automated execution pending |
 | FR-017 | Operator console | CI normal and fault scenarios | Workflow defined |
 | FR-018 | WPF HMI | Windows build and manual matrix | Build/manual pending |
-| FR-019 | LinuxCNC profile | LinuxCNC manual matrix | Manual pending |
+| FR-019 | Digital Twin profile | Digital Twin manual matrix | Manual pending |
 | FR-020 | Application interfaces and adapter boundaries | Architecture review | Implemented design |
 | FR-021 | `MachineStatusService.ObserveAsync` | Status-stream application test | Automated execution pending |
 | FR-022 | `ActiveOperationController` and `MachineStopService` | Operator-stop application test | Automated execution pending |

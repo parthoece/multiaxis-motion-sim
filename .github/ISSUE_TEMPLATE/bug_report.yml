@@ -20,7 +20,7 @@ body:
         - Virtual PLC
         - Persistence
         - WPF HMI
-        - LinuxCNC profile
+        - Digital Twin profile
         - Documentation
     validations:
       required: true

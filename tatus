@@ -1,0 +1,13 @@
+* [33md83b493[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/grblhal-adapter[m[33m, [m[1;31morigin/feature/grblhal-adapter[m[33m)[m Add grblHAL software simulator backend
+* [33md37359a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m fault architecture update
+* [33m35696b8[m fault architecture update
+* [33m47382f6[m Rewrite README as guided project demonstration
+* [33m8efef4a[m readme intearctive
+* [33mf6db97d[m Release SQLite connections before test cleanup
+* [33mb79d1de[m hmi fix
+* [33m26dd6f4[m Replace GitHub owner placeholders
+[31m|[m * [33m3fc1332[m[33m ([m[1;31morigin/dependabot/nuget/dotnet-dependencies-9cb5070228[m[33m)[m Bump the dotnet-dependencies group with 1 update
+[31m|[m[31m/[m  
+[31m|[m * [33mb51670e[m[33m ([m[1;31morigin/dependabot/github_actions/github-actions-0b660f9e62[m[33m)[m Bump the github-actions group with 4 updates
+[31m|[m[31m/[m  
+* [33m90ed29a[m first commit

@@ -25,9 +25,9 @@
 - name: "area: hmi"
   color: "c5def5"
   description: WPF operator interface
-- name: "area: linuxcnc"
+- name: "area: digital-twin"
   color: "1d76db"
-  description: LinuxCNC, HAL, and G-code
+  description: Digital Twin, HAL, and G-code
 - name: "area: safety"
   color: "b60205"
   description: Permissives, stop, limits, and recovery

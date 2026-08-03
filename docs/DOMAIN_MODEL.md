@@ -40,7 +40,7 @@
 | `IOperationEventLog` | Write structured diagnostic events |
 | `IClock` | Provide testable time |
 
-The domain does not know whether motion is implemented by an in-process simulator, LinuxCNC, a PLC, or a commercial motion card.
+The domain does not know whether motion is implemented by an in-process simulator, Digital Twin, a PLC, or a commercial motion card.
 
 ---
 

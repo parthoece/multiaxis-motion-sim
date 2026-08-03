@@ -10,7 +10,7 @@ After publishing:
 ## General
 
 - Replace every `parthoece` placeholder.
-- Add repository topics: `motion-control`, `virtual-commissioning`, `linuxcnc`, `csharp`, `wpf`, `industrial-automation`, `simulation`.
+- Add repository topics: `motion-control`, `virtual-commissioning`, `digital-twin`, `csharp`, `wpf`, `industrial-automation`, `simulation`.
 - Enable Issues and Discussions.
 - Delete merged branches automatically.
 
