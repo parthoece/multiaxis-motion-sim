@@ -3,7 +3,7 @@ message: "If this software supports your engineering work, cite it using this me
 title: "Virtual Multi-Axis Motion Control Platform"
 type: software
 authors:
-  - name: "multiaxis-motion-sim contributors"
+  - name: "Partho Adhikari"
 abstract: >-
   A software-in-the-loop virtual commissioning platform for multi-axis
   machine-control workflows, deterministic faults, and inspection simulation.
